@@ -1,6 +1,6 @@
 ---
 title: "Project 1"
-author: "Chris Sutherland"
+author: "PB, KA, HS"
 date: "29/01/2021"
 output: pdf_document
 ---
