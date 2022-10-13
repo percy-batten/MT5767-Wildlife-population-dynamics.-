@@ -1,0 +1,34 @@
+---
+title: "Assignment 1 MT5767"
+author: "Hanna Shankland, Percy Batten, Kit Arnold"
+date: "13/10/2022"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1 
+
+
+2
+
+a)
+
+b)
+
+c)
+Does it make more sense to you to model $K_t$ as a function of rainfall in time t or time t−1? 
+
+The carrying capacity, $K_t$ of Wildebeest at time t is dependent on a few factors in their habitat. These include: Food supply, water supply, habitat space and competition. 
+Wildebeest have a diet that consists strictly of grazing. Intuitively, this would depend on the rainfall of the current year; the effects of drouts can be very rapid and cause grass to dry out on a timescale of weeks, which may instantaneously affect any animal population that depend on it.  
+However, a study in the Journal of Ecology [Joan Dudney et al. 2017] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They also note that "the effect of previous-year precipitation was greater for forbs
+than grasses, indicating that rainfall-induced biotic effects
+strongly constrain forb growth and weakly impact grasses." It would seem that there is at least some effect of a previous year's rainfall on the abundance of our Wildebeests' favoured food.  
+Another study [Gundula S. Bartzke et al.] notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. 
+
+3
+
+a)
+
+b)
