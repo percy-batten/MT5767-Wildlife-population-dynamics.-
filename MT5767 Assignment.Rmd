@@ -2,11 +2,17 @@
 title: "Project 1 mt5767"
 author: "PB, KA, HS"
 date: "29/01/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
+library(plotly)
+
 ```
 
 Here is a very basic skeleton guide to give a sense of what I expect from the assignment. Hopefully this helps. Not sure how much rmarkdown you have been exposed to, but in case you wanted to (learn to) use it, here you go. This pdf is generated from the code I sent, but changing the output in the first few lines to html_document will produce an html file. You can submit pdf, html, or word to moodle and you definitely don't have to use markdown (although it allows you to embed code and therefore avoids having to submit multiple files). Please ask if you aren't sure.
@@ -27,36 +33,169 @@ I dont want creating the markdown document to become the challenge, so I emphasi
 2. help each other out
 3. ask me if there is something wrong
 
-
 ## Question 1
 
-- **identify appropriate distributions for the stochastic components of the model (a few sentences: what and why)**
+We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth.
 
-One appropriate distribution for the stochastic part of the model is X because X. 
+$\large{State~Model}$
 
-- *write an R script to simulate dynamics from this model*
+$\large{Survival}$
 
-```{r, eval=FALSE}
-#annotation is good practice
-#here you can embed your script
+A proportion of each state survives, denoted below as $u$, with age category having a specific survival probability; it is noted that all individuals in age category 4 die.
+
+$$ u_{1(s),1,t} \thicksim binomial(n_{1, t-1}, 0.45) \\
+u_{1(s),2,t} \thicksim binomial(n_{2,t-1}, 0.7) \\
+u_{1(s),3,t} \thicksim binomial(n_{3,t-1}, 0.7) \\
+u_{1(s),4,t} = 0 $$
+
+$\large{Ageing}$
+
+All individuals will age up due to the structure of the population. This leaves no individuals in the first class due to there being no age class younger than age class 1.
+
+$$ u_{2(r),1,t} = 0 \\
+u_{2(r),2,t} = u_{1(s),1,t} \\
+u_{2(r),3,t} = u_{1(s),2,t} \\
+u_{2(r),4,t} = u_{1(s),3,t} $$
+
+$\large{Birth}$
+
+In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births will feed into the first age category. The number of individuals in age categories 2 and above are not effected in this sub-process
+
+$$ u_{3(b),1,t} = u_{2(r),1,t} + b_{2,t} + b_{3,t} \\
+u_{3(b),2,t} = u_{2(r),2,t} \\
+u_{3(b),3,t} = u_{2(r),3,t} \\
+u_{3(b),4,t} = u_{2(r),4,t} \\
+where~\small{b_{2,t} \thicksim poisson(0.9*u_{2(r),2,t}) \\
+b_{3,t} \thicksim poisson(1.9*u_{2(r),3,t})} $$
+
+
+Hence, from the above sub-processes, our state model produces species abundance estimates for each category $i$ at time $t$:
+
+$$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
+
+$\large{Observation~Model}$
+
+Finally, we want to generate our observation model. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model. By this methodology, the distribution was chosen as below:
+
+$$ y_{i,t} \thicksim binomial(n_{i,t}, 0.5) ~~~~~~
+\small{for~i=1,...,4}$$
+
+Coding these models, a function was created for a four age species, which took inputs initial population, survival rates, birth rates, probability of detection and number of years to simulate
+
+```{r}
+
+# inputs
+  # n0 - vector of initial population abundances by age
+  # phi - vector of survival probabilities for each age
+  # rho - vector of birth rates for each age
+  # detect_p - probability of detecting an individual
+  # nyears - number of years to simulate 
+bas_ssm <- function(n0, phi, rho, detect_p, nyears) {
+  
+  # define matrix for state model variables
+  # column for each age category; row per year
+  state_mat <- matrix(0, nrow = nyears, ncol = length(n0))
+  # add initial data
+  state_mat[1, ] <- n0
+  
+  # define matrix for observation model variables
+  obs_mat <- matrix(0, nrow = nyears, ncol = length(n0))
+  # add initial observation
+  obs_mat[1, ] <- rbinom(4, state_mat[1, ], detect_p)
+  
+  for (i in 2:nyears) {
+    # survive 
+    u1_1 <- rbinom(1, state_mat[i - 1, 1], phi[1])
+    u1_2 <- rbinom(1, state_mat[i - 1, 2], phi[2])
+    u1_3 <- rbinom(1, state_mat[i - 1, 3], phi[3])
+    # u1_4 = 0
+    
+    # age
+    # u2_1 = 0
+    u2_2 <- u1_1
+    u2_3 <- u1_2
+    u2_4 <- u1_3
+    
+    # birth
+    u3_1 <- rpois(1, rho[2] * u2_2) +
+      rpois(1, rho[3] * u2_3)
+    
+    # overall
+    state_mat[i, ] <- c(u3_1, u2_2, u2_3, u2_4)
+    
+    
+    # observation model
+    obs_mat[i, ] <- rbinom(4, state_mat[i, ], detect_p)
+  }
+  return(data.frame(Year = 1:nyears,
+                    Abundance = c(state_mat, obs_mat),
+                    Type = rep(c("State", "Observation"), each = nyears * 4),
+                    State = rep(c("Age 1", "Age 2", "Age 3", "Age 4"), each = nyears,
+                                times = 2)))
+}
 
 ```
 
-- simulate and plot 25 years of age-specific population dynamics and observation
+The variables were then coded for the above function, and it was run to simulate 25 years.
 
-```{r, fig.height=3,fig.width=3,fig.align='center'}
-#R code to produce a plot, which will show in the doc
-#alternatively, past the figure into the document
-X <- rnorm(100,10,3)
-hist(X)
+```{r}
+
+n0 <- c(150, 70, 50, 30)
+phi <- c(0.45, 0.7, 0.7, 0)
+rho <- c(0, 0.9, 1.9, 0)
+
+# set seed for replicability
+set.seed(2791)
+
+model <- bas_ssm(n0, phi, rho, 0.5, 25)
+
 ```
+
+Looking at the results graphically looking at the overall population dynamics, combining the age groups
+
+```{r, echo=F, message=F}
+
+ov_abundance <- model %>%
+  group_by(Type, Year) %>%
+  summarise(`Overall Abundance` = 
+              sum(Abundance)) %>%
+  ggplot(aes(x = Year, y = `Overall Abundance`, col = Type)) +
+  geom_line() +
+  labs(col="Model") +
+  ylab("Abundance") + 
+  ggtitle("Figure 1.1 - Overall Abundance")
+
+ggplotly(ov_abundance, ttoltip = c("Overall Abundance", "Year"))
+
+```
+
+Then splitting the models by age group
+
+```{r, echo=F}
+
+age_abundance <- ggplot(model, aes(x = Year, y = Abundance, col = Type)) +
+  geom_line() +
+  facet_wrap(~ State) +
+  labs(col="Model") +
+  ggtitle("Figure 1.2")
+
+ggplotly(age_abundance, ttoltip = c("Abundance", "Year"))
+
+```
+
+We can see from figures 1.1 and 1.2, that the age category which is the most similar to the overall abundance shape is Age 1; this is expected due to this age class contributing most to the overall population. At the start, Age 1 makes up half of the population!
+After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 contributes most to Age 1 as its birth rate ($\rho_3 = 1.9$) is double that of Age 2($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in Age 1 there is often an increase between those years in Age 3 - this can be seen between years 7 and 8 where there is a large increase in Age 1 which can also be seen in Age 3, but in Age 2 the number of individuals actually decreases between these years.
+
+Comparing our state model to our observation model, we usually see around half of the actual population, which is to be expected with our probability of detection $p = 0.5$.
 
 ## Question 2
 
-- if illegal harvesting occurred before growth, the model would be:
+We are given the model where illegal harvesting is assumed to take place after growth:
 
-$$N_t|N_{t-1} = X$$
+$$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
+This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$. However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed this year. Hence if we want the model to reflect this case we would use model:
 
+$$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
 
 - does it make more sense to model $r_t$ as a function of rainfall in time $t$ or time $t-1$? (neither is wrong, focus on interpreting the biological sequencing implied by the model)
 
