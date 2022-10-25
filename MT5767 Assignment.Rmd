@@ -191,19 +191,40 @@ Comparing our state model to our observation model, we usually see around half o
 
 ## Question 2
 
+### A
 We are given the model where illegal harvesting is assumed to take place after growth:
 
 $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$. However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed this year. Hence if we want the model to reflect this case we would use model:
 
 $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
+### Part B
 
-- does it make more sense to model $r_t$ as a function of rainfall in time $t$ or time $t-1$? (neither is wrong, focus on interpreting the biological sequencing implied by the model)
- 
+Thinking biologically about the situation the carrying capacity and growth rate
+depend upon rainfall. There is a postive association, which indicates that
+increased rainfall leads to larger amounts of grass for wildebeest to eat
+leading to higher carrying capactiy and growth rate. 
 
-A few sentences here. What is your choice, and why. I would make sense to model X as a function of X because X. 
+There are a number of factors to consider
 
-- does it make more sense to model $K_t$ as a function of rainfall in time $t$ or time $t-1$? (again, neither is wrong)
+Wildebeest usually give birth at the start of the wet season, 
+this would indicate that the current rainfall value is more important
+as wildebeest generally graze on short rapidly growing grass and rainfall
+in the current year would have a higher impact on growth on the rapidly growing
+frequently grazed grass than the previous year, leading to a higher supply for 
+young wildebeest leading to a higher growth rate. 
+
+Additionally the fact that wildebeest have an annual migration further supports
+the use of rainfall on the current year for use in the model as wildebeest 
+specifically migrate in response to rainfall in the current year in relation
+to wet and dry seasons. 
+  
+Note: will email lecturer to check if I should include sources regarding
+general biological information. Still working on section. 
+
+
+
+### Part C
 
 The carrying capacity, $K_t$ of Wildebeest at time t is dependent on a few factors in their habitat. These include: Food supply, water supply, habitat space and competition. 
 Wildebeest have a diet that consists strictly of grazing. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may instantaneously affect any animal population that depend on it.  
@@ -391,21 +412,6 @@ to false predictions.
 
 
 ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ## Question 3
