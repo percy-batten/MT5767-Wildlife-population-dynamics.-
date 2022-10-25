@@ -194,7 +194,7 @@ ggplotly(age_abundance, ttoltip = c("Abundance", "Year"))
 
 We can see from figures 1.1 and 1.2, that the age category which is the most similar to the overall abundance shape is Age 1; this is expected due to this age class contributing most to the overall population. At the start, Age 1 makes up half of the population!
 
-After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 contributes most to Age 1 as its birth rate ($\rho_3 = 1.9$) is more than double that of Age 2($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in Age 1 there is often an increase between those years in Age 3 - this can be seen between years 7 and 8 where there is a large increase in Age 1 which can also be seen in Age 3, but in Age 2 the number of individuals actually decreases between these years.
+After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 contributes most to Age 1 as its birth rate ($\rho_3 = 1.9$) is more than double that of Age 2 ($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in Age 1 there is often an increase between those years in Age 3 - this can be seen between years 7 and 8 where there is a large increase in Age 1 which can also be seen in Age 3, but in Age 2 the number of individuals actually decreases between these years.
 
 Comparing our state model to our observation model, we usually see around half of the actual population, which is to be expected with our probability of detection $p = 0.5$.
 
