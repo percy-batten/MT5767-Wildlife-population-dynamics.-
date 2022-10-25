@@ -1,5 +1,5 @@
 ---
-title: "Project 1 mt5767"
+title: "Project 1 MT5767"
 author: "PB, KA, HS"
 date: "29/01/2021"
 output:
@@ -42,7 +42,7 @@ $\large{State~Model}$
 
 $\large{Survival}$
 
-A proportion of each state survives, denoted below as $u$, with age category having a specific survival probability; it is noted that all individuals in age category 4 die.
+A proportion of each state survives, denoted below as $u$, with each age category having a specific survival probability; it is noted that all individuals in age category 4 die. Below, $n_{i,t-1}$ denotes the population size at the previous time with $i=1,..,4$ representing the respective age category. Since only a proportion of the previous population survives with a certain probability, a binomial model was selected.
 
 $$ u_{1(s),1,t} \thicksim binomial(n_{1, t-1}, 0.45) \\
 u_{1(s),2,t} \thicksim binomial(n_{2,t-1}, 0.7) \\
@@ -51,7 +51,7 @@ u_{1(s),4,t} = 0 $$
 
 $\large{Ageing}$
 
-All individuals will age up due to the structure of the population. This leaves no individuals in the first class due to there being no age class younger than age class 1.
+The population is structured such that no individual can stay in their age category between years and must age up, with the individuals dying after age 4. Hence, no individuals are in the first class after ageing due to it being the youngest category.
 
 $$ u_{2(r),1,t} = 0 \\
 u_{2(r),2,t} = u_{1(s),1,t} \\
@@ -60,7 +60,7 @@ u_{2(r),4,t} = u_{1(s),3,t} $$
 
 $\large{Birth}$
 
-In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births will feed into the first age category. The number of individuals in age categories 2 and above are not effected in this sub-process
+In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births enter into the population in age category 1. The number of individuals in age categories 2 and above are not effected in this sub-process. As we ar dealing with reproduction rates and not probabilities, with the reproduction rate for age 3 individuals indicating more than one offspring per some individuals, a poisson distribution was chosen.
 
 $$ u_{3(b),1,t} = u_{2(r),1,t} + b_{2,t} + b_{3,t} \\
 u_{3(b),2,t} = u_{2(r),2,t} \\
@@ -185,7 +185,8 @@ ggplotly(age_abundance, ttoltip = c("Abundance", "Year"))
 ```
 
 We can see from figures 1.1 and 1.2, that the age category which is the most similar to the overall abundance shape is Age 1; this is expected due to this age class contributing most to the overall population. At the start, Age 1 makes up half of the population!
-After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 contributes most to Age 1 as its birth rate ($\rho_3 = 1.9$) is double that of Age 2($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in Age 1 there is often an increase between those years in Age 3 - this can be seen between years 7 and 8 where there is a large increase in Age 1 which can also be seen in Age 3, but in Age 2 the number of individuals actually decreases between these years.
+
+After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 contributes most to Age 1 as its birth rate ($\rho_3 = 1.9$) is more than double that of Age 2($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in Age 1 there is often an increase between those years in Age 3 - this can be seen between years 7 and 8 where there is a large increase in Age 1 which can also be seen in Age 3, but in Age 2 the number of individuals actually decreases between these years.
 
 Comparing our state model to our observation model, we usually see around half of the actual population, which is to be expected with our probability of detection $p = 0.5$.
 
