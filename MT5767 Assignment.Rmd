@@ -36,7 +36,7 @@ I dont want creating the markdown document to become the challenge, so I emphasi
 
 ## Question 1
 
-We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth.
+We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth. To simulate population dynamics we have created a state space BAS model, which takes into consideration each of the sub-processes for each age category. From these state space model estimates, which we will consider as the true population size, we create an observation model, which considers what we would likely observe if we were to sample the population.
 
 $\large{State~Model}$
 
@@ -70,18 +70,18 @@ where~\small{b_{2,t} \thicksim poisson(0.9*u_{2(r),2,t}) \\
 b_{3,t} \thicksim poisson(1.9*u_{2(r),3,t})} $$
 
 
-Hence, from the above sub-processes, our state model produces species abundance estimates for each category $i$ at time $t$:
+Hence, from the above sub-processes, our state model produces species abundance estimates, $n_{i, t}$ for each category $i$ at time $t$:
 
 $$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
 
 $\large{Observation~Model}$
 
-Finally, we want to generate our observation model. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model. By this methodology, the distribution was chosen as below:
+Finally, we want to generate our observation model; this is the number of individuals we would see in a sample taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen as below, with each age category having the same probability of detection:
 
 $$ y_{i,t} \thicksim binomial(n_{i,t}, 0.5) ~~~~~~
 \small{for~i=1,...,4}$$
 
-Coding these models, a function was created for a four age species, which took inputs initial population, survival rates, birth rates, probability of detection and number of years to simulate
+Coding these models, a function was created for a four age species, which took inputs: initial population; survival rates; birth rates; probability of detection; number of years to simulate.
 
 ```{r}
 
@@ -91,6 +91,7 @@ Coding these models, a function was created for a four age species, which took i
   # rho - vector of birth rates for each age
   # detect_p - probability of detecting an individual
   # nyears - number of years to simulate 
+# the function assumes that no age 4 individuals survive and no individuals age into age 1
 bas_ssm <- function(n0, phi, rho, detect_p, nyears) {
   
   # define matrix for state model variables
@@ -104,6 +105,7 @@ bas_ssm <- function(n0, phi, rho, detect_p, nyears) {
   # add initial observation
   obs_mat[1, ] <- rbinom(4, state_mat[1, ], detect_p)
   
+  # loop through our state space BAS model and observation model to simulate estimates for number of years specified 
   for (i in 2:nyears) {
     # survive 
     u1_1 <- rbinom(1, state_mat[i - 1, 1], phi[1])
@@ -137,7 +139,13 @@ bas_ssm <- function(n0, phi, rho, detect_p, nyears) {
 
 ```
 
-The variables were then coded for the above function, and it was run to simulate 25 years.
+We are told our initial population sizes are:
+$$ n_{1,1} = 150 \\
+n_{2,1} = 70 \\
+n_{3,1} = 50 \\
+n_{4,1} = 30$$
+
+The variables were coded for the above function, using our probabilities and rates discussed above as well as these initial population sizes and the function was run to simulate 25 years.
 
 ```{r}
 
@@ -152,7 +160,7 @@ model <- bas_ssm(n0, phi, rho, 0.5, 25)
 
 ```
 
-Looking at the results graphically looking at the overall population dynamics, combining the age groups
+Looking at the results graphically, we consider the overall population dynamics, combining the age groups
 
 ```{r, echo=F, message=F}
 
@@ -178,7 +186,7 @@ age_abundance <- ggplot(model, aes(x = Year, y = Abundance, col = Type)) +
   geom_line() +
   facet_wrap(~ State) +
   labs(col="Model") +
-  ggtitle("Figure 1.2")
+  ggtitle("Figure 1.2 - Abundance by Age")
 
 ggplotly(age_abundance, ttoltip = c("Abundance", "Year"))
 
