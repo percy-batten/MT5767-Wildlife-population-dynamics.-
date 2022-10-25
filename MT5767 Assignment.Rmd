@@ -36,7 +36,9 @@ I dont want creating the markdown document to become the challenge, so I emphasi
 
 ## Question 1
 
-We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth. To simulate population dynamics we have created a state space BAS model, which takes into consideration each of the sub-processes for each age category. From these state space model estimates, which we will consider as the true population size, we create an observation model, which considers what we would likely observe if we were to survey the population.
+We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth. To simulate population dynamics we have created a state space model, consisting of the state model and the observation model. 
+The state model is a BAS model and takes into consideration each sub-processes effect on the age categories. It is a first order markov process, thereby is only dependent on the last population dynamics' estimate. The birthing and survival processes are stochastic and depend on distributions adding variability to the model, whereas ageing is deterministic. These state model estimates are considered as our true population sizes. 
+We then create an observation model, which depends on the true population at the current time step. It considers what we would likely observe if we were to survey the population.
 
 $\large{State~Model}$
 
