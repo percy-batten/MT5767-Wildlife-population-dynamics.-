@@ -212,7 +212,8 @@ strongly constrain forb growth and weakly impact grasses." It would seem that th
 Another study [Gundula S. Bartzke et al.] notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect of long drought periods. 
 However, the effects of rainfall measured in the current year are much greater in comparison. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales which would indicate that a model for $K_t$ based on $r_{t-1}$ will be more informative. [need a citation? or none at all?]
 
-# Just a note here you've said in the previous passage that effects of rainfall in the current year are more effective but then listed r_(t-1) not r(t) is this a mistake or intentional? -Percy
+# Just a note here you've said in the previous passage that effects of rainfall in the current year are more 
+# effective but then listed r_(t-1) not r(t) is this a mistake or intentional? -Percy
 
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 ---
