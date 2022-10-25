@@ -212,7 +212,199 @@ strongly constrain forb growth and weakly impact grasses." It would seem that th
 Another study [Gundula S. Bartzke et al.] notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect of long drought periods. 
 However, the effects of rainfall measured in the current year are much greater in comparison. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales which would indicate that a model for $K_t$ based on $r_{t-1}$ will be more informative. [need a citation? or none at all?]
 
+# Just a note here you've said in the previous passage that effects of rainfall in the current year are more effective but then listed r_(t-1) not r(t) is this a mistake or intentional? -Percy
+
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
+---
+## Question 3
+### Part A
+In this part we will be fitting two formulation of the time varying growth rate
+model. One where $r_t$ (growth rate over time) is modeled as a function of rain
+in the same year $R_t$ and another where $r_t$ is modeled as a function of 
+rain in the previous year. As seen previously the log linear model of the form 
+$$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
+is used. 
+
+Where $N_t$ is the population at time step t, 
+
+Where $N_t$ is the population at time step t-1, 
+
+$K_t$ is the carrying capacity which is assumed to be fixed and 
+
+$c_{t-1}$ is the removal from illegal hunting from the previous year. 
+
+Specifically in this case we are concerned with the growth rate, thus we assume
+constant carrying capacity. This gives us the following equations
+
+### Equation 1 
+
+Where the growth rate is expressed as a function of rainfall in the same year.
+
+$$ r_t = exp(\alpha_0 +\alpha_1R_t)$$
+
+### Equation 2
+
+Where the growth rate is expressed as a function of rainfall in the 
+previous year. 
+
+$$ r_t = exp(\alpha_0 +\alpha_1R_{t-1})$$
+
+### Equation 3
+
+Where the carrying capacity is assumed to be constant. 
+
+$$ k_t = exp(\beta_0) $$
+
+We shall then proceed to fit the model using R. 
+
+```{r}
+library(statsecol)
+data(wildebeest)
+
+# Coding in progress using practical as a base
+
+#defining function
+
+rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type="nll"){
+  
+  #parameter set up
+  
+  N0 <- exp(pars[1])
+  N <- numeric(years)
+  r <- numeric(years)
+  k <- numeric(years)
+  N[1] <- N0
+  r[1] <- NA
+  k[1] <- NA
+
+  # Current year model 
+  
+  if(model == 1){
+    if(length(pars)!=4){stop("par should have 4 values")}
+    r[2:years] <- exp(pars[2]+pars[3]*rain[2:years])
+    k[2:years] <- rep(exp(pars[4]),years-1)
+  }
+  
+  # Previous year model 
+  
+  if(model == 2){
+    if(length(pars)!=4){stop("par should have 4 values")}
+    r[2:years] <- exp(pars[2]+pars[3]*rain[1:years-1])
+    k[2:years] <- rep(exp(pars[4]),years-1)
+  }
+  
+    #generate population dynamics:
+  for(i in 2:years){
+    N[i]=N[i-1] + r[i] * N[i-1] * (1-N[i-1]/k[i]) - removals[i-1]
+  }
+  
+  negloglik <- -sum(dnorm(Nhat,N,SEhat,log=TRUE), na.rm=TRUE)
+  
+  #what should be returned? 
+  if(type=="nll"){  return(negloglik)}
+  if(type=="proj"){ return(N)}
+}
+
+
+#assigning parameter values based upon the data
+
+yrs <- nrow(wildebeest)
+rmv <- wildebeest$Catch
+Nhat <- wildebeest$Nhat
+SEhat <- wildebeest$sehat
+rain <- wildebeest$rain
+
+# fitting the two models:
+fit_1 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = rain_rK_nll, years = yrs, 
+               removals = rmv, Nhat = Nhat, SEhat = SEhat, rain = rain, model = 1)
+fit_2 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = rain_rK_nll, years = yrs, 
+               removals = rmv, Nhat = Nhat, SEhat = SEhat, rain = rain, model = 2)
+
+# checking parameter values
+# Because of the way we've worked our function pars[3] is our alpha 1
+
+#model 1 alpha 1
+alpha_1_1 <- fit_1$par[3]
+
+#Model 2 alpha 1
+
+alpha_2_1 <- fit_2$par[3]
+
+print(alpha_1_1)
+
+print(alpha_2_1)
+
+#calculating AIC
+
+aic1 <- 2*fit_1$value + 2*length(fit_1$par)
+aic2 <- 2*fit_2$value + 2*length(fit_2$par)
+
+aictab <- data.frame(
+            Model = c("r(t)k(.)","r(t-1)k(.)"),
+            AIC = c(aic1,aic2),
+            dAIC = c(aic1,aic2)-min(c(aic1,aic2)))
+aictab[order(aictab$dAIC),]
+
+```
+As can be seen from above we obtain an AIc value of -18.96683 for the current
+year model and an AIC of -17.14583 from the previous year model. 
+This would indicate that the current year model is preferable as it has lower AIC.
+
+This also indicates that the slope parameter of approximately 0.63 from 
+alpha_1_1 the current year model is preferable which is different from the 0.15 
+slope parameter for the previous year model indicating that a steeper slope
+parameter is preferable. 
+
+```{r}
+
+# Note this section is used for graphing and requires the previous R chunk to be
+# run to work
+
+proj_1 <- rain_rK_nll(fit_1$par, years = yrs, removals = rmv, Nhat = Nhat, 
+                      SEhat = SEhat, rain = rain, model=1, type="proj")
+proj_2 <- rain_rK_nll(fit_2$par, years = yrs, removals = rmv, Nhat = Nhat, 
+                      SEhat = SEhat, rain = rain, model=2, type="proj")
+
+pred_df <- data.frame(years = rep(wildebeest$year,4),
+                      N = c(proj_1,proj_2),
+                      Model=rep(aictab$Model,each=nrow(wildebeest)))
+
+gpreds <- ggplot(wildebeest, aes(x=year, y=Nhat)) +
+          geom_errorbar(aes(ymin=lci,ymax=uci), width=0) +
+          ggtitle("Plot 3- Abundance over years for current year vs previous year models") +
+          geom_point(size=3) +
+          geom_line(data=pred_df, aes(x=years,y=N,color=Model,group=Model),size=0.8) +
+          ylim(0,2.1) + ylab("Abundance (millions)") + xlab("Year") +
+          theme_bw()
+gpreds
+
+```
+As can be seen from the graph above both models fit well and are within error
+bounds which is expected given the low AIC previously, however it can be seen
+that The model represented by the blue line has a better fit as the line
+is closer to the center of the error bounds for most points. It should also be 
+of note that there are no large local minima or maxima on the graph, 
+which is good as it indicates that parameter estimates will not lead
+to false predictions. 
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Question 3
