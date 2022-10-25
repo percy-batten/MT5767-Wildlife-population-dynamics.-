@@ -36,7 +36,7 @@ I dont want creating the markdown document to become the challenge, so I emphasi
 
 ## Question 1
 
-We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth. To simulate population dynamics we have created a state space BAS model, which takes into consideration each of the sub-processes for each age category. From these state space model estimates, which we will consider as the true population size, we create an observation model, which considers what we would likely observe if we were to sample the population.
+We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth. To simulate population dynamics we have created a state space BAS model, which takes into consideration each of the sub-processes for each age category. From these state space model estimates, which we will consider as the true population size, we create an observation model, which considers what we would likely observe if we were to survey the population.
 
 $\large{State~Model}$
 
@@ -76,7 +76,7 @@ $$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
 
 $\large{Observation~Model}$
 
-Finally, we want to generate our observation model; this is the number of individuals we would see in a sample taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen as below, with each age category having the same probability of detection:
+Finally, we want to generate our observation model; this is the number of individuals we would see in a survey taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen as below, with each age category having the same probability of detection:
 
 $$ y_{i,t} \thicksim binomial(n_{i,t}, 0.5) ~~~~~~
 \small{for~i=1,...,4}$$
@@ -200,13 +200,16 @@ Comparing our state model to our observation model, we usually see around half o
 
 ## Question 2
 
-### A
+Question 2 considers a wildebeest example seen in lectures, where abundance estimates were produced from aerial surveys taken in the Serengeti between 1960 to 1989. The rainfall for the season and the number of animals taken by illegal harvesting were also recorded yearly. Trying to incorporate these variables into the logistic growth model suggested, to show their impact on the wildebeest population, we consider different forms of the logistic growth model in this question.
+
+### Part A
 We are given the model where illegal harvesting is assumed to take place after growth:
 
 $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$. However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed this year. Hence if we want the model to reflect this case we would use model:
 
 $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
+
 ### Part B
 
 Thinking biologically about the situation the carrying capacity and growth rate
