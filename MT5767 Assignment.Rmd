@@ -381,7 +381,7 @@ aictab <- data.frame(
 aictab[order(aictab$dAIC),]
 
 ```
-As can be seen from above we obtain an AIc value of -18.96683 for the current
+As can be seen from above we obtain an AIC value of -18.96683 for the current
 year model and an AIC of -17.14583 from the previous year model. 
 This would indicate that the current year model is preferable as it has lower AIC.
 
@@ -414,9 +414,9 @@ gpreds <- ggplot(wildebeest, aes(x=year, y=Nhat)) +
 gpreds
 
 ```
-As can be seen from the graph above both models fit well and are within error
-bounds which is expected given the low AIC previously, however it can be seen
-that The model represented by the blue line has a better fit as the line
+It can be seen from the graph above both models fit well and are within error
+bounds which is expected given the low AIC previously. However, it can be seen
+that the model represented by the blue line has a better fit as the line
 is closer to the center of the error bounds for most points. It should also be 
 of note that there are no large local minima or maxima on the graph, 
 which is good as it indicates that parameter estimates will not lead
@@ -424,13 +424,10 @@ to false predictions.
 
 
 
----
 
+### Part B
 
-## Question 3
-#### part b
-
-As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model, K_rain. 
+As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$ in terms of rainfall in the current year, $R_t$ or previous year $R_{t-1}$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model, K_rain. 
 The projection model we will use is:
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 where:
