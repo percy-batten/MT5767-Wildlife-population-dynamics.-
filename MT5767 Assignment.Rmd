@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(tidyverse)
 library(plotly)
+library(statsecol)
 
 ```
 
@@ -220,7 +221,7 @@ to wet and dry seasons.
 Note: will email lecturer to check if I should include sources regarding
 general biological information. Still working on section. 
 
-## Part B reword
+### Part B reword
 (I didn't want to change what you had written above, but rearranged/reworded it to make it flow better. I have put the rewording in this part so if you want to use some of it you can add it).
 
 Thinking biologically about the situation that growth rate, $r_t$, depends upon rainfall, we can see increased rainfall leads to larger amounts of grass for wildebeest to eat, thus leading to healthier animals, giving them a better chance to survive and reproduce.  
@@ -252,7 +253,7 @@ K_t = \exp{(\beta_0 + \beta_1R_t)}$$
 ## Question 3
 ### Part A
 In this part we will be fitting two formulation of the time varying growth rate
-model. One where $r_t$ (growth rate over time) is modeled as a function of rain
+model. One where $r_t$ (growth rate over time) is modelled as a function of rain
 in the same year $R_t$ and another where $r_t$ is modeled as a function of 
 rain in the previous year $R_{t-1}$. 
 
@@ -262,29 +263,29 @@ is used.
 
 Where $N_t$ is the population at time step $t$, 
 
-Where $N_t$ is the population at time step $t-1$, 
+$N_{t-1}$ is the population at time step $t-1$, 
 
 $K_t$ is the carrying capacity which is assumed to be fixed (Equation 3) and 
 
-$c_{t-1}$ is the removal from illegal hunting from the previous year. 
+$c_{t-1}$ is the removal from illegal hunting from time step $t-1$. 
 
 Specifically in this case, we are concerned with the growth rate, thus we assume
-constant carrying capacity. This gives us the following equations
+constant carrying capacity. This gives us the following equations for $r_t$ and $K_t$.
 
-### Equation 1 
+#### Equation 1 
 
 Where the growth rate is expressed as a function of rainfall in the same year.
 
 $$ r_t = exp(\alpha_0 +\alpha_1R_t)$$
 
-### Equation 2
+#### Equation 2
 
 Where the growth rate is expressed as a function of rainfall in the 
 previous year. 
 
 $$ r_t = exp(\alpha_0 +\alpha_1R_{t-1})$$
 
-### Equation 3
+#### Equation 3
 
 Where the carrying capacity is assumed to be constant. 
 
@@ -293,7 +294,6 @@ $$ K_t = exp(\beta_0) $$
 We shall then proceed to fit the model using R. 
 
 ```{r}
-library(statsecol)
 data(wildebeest)
 
 # Coding in progress using practical as a base
@@ -312,7 +312,7 @@ rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type=
   r[1] <- NA
   k[1] <- NA
 
-  # Current year model 
+  # Current year rainfall model 
   
   if(model == 1){
     if(length(pars)!=4){stop("par should have 4 values")}
@@ -320,7 +320,7 @@ rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type=
     k[2:years] <- rep(exp(pars[4]),years-1)
   }
   
-  # Previous year model 
+  # Previous year rainfall model 
   
   if(model == 2){
     if(length(pars)!=4){stop("par should have 4 values")}
@@ -382,15 +382,15 @@ aictab[order(aictab$dAIC),]
 
 ```
 As can be seen from above we obtain an AIC value of -18.96683 for the current
-year model and an AIC of -17.14583 from the previous year model. 
-This would indicate that the current year model is preferable as it has lower AIC.
+year rainfall model and an AIC of -17.14583 from the previous year rainfall model. 
+This would indicate that the current year rainfall model is preferable as it has a lower AIC.
 
-This also indicates that the slope parameter of approximately 0.63 from 
-alpha_1_1 the current year model is preferable which is different from the 0.15 
-slope parameter for the previous year model indicating that a steeper slope
+This also indicates that the slope parameter of approximately `r round(alpha_1_1, 2)` from 
+`alpha_1_1` in the current year model rainfall is preferable which is different from the `r round(alpha_2_1, 2)`
+slope parameter for the previous year rainfall model indicating that a steeper slope
 parameter is preferable. 
 
-```{r}
+```{r, message=FALSE}
 
 # Note this section is used for graphing and requires the previous R chunk to be
 # run to work
@@ -406,7 +406,7 @@ pred_df <- data.frame(years = rep(wildebeest$year,4),
 
 gpreds <- ggplot(wildebeest, aes(x=year, y=Nhat)) +
           geom_errorbar(aes(ymin=lci,ymax=uci), width=0) +
-          ggtitle("Figure 3.1- Abundance over years for current year vs previous year models") +
+          ggtitle("Figure 3.1 - Wildebeest Abundance") +
           geom_point(size=3) +
           geom_line(data=pred_df, aes(x=years,y=N,color=Model,group=Model),size=0.8) +
           ylim(0,2.1) + ylab("Abundance (millions)") + xlab("Year") +
@@ -415,7 +415,7 @@ gpreds
 
 ```
 It can be seen from the graph above both models fit well and are within error
-bounds which is expected given the low AIC previously. However, it can be seen
+bounds, which is expected given the low AIC previously. However, it can be seen
 that the model represented by the blue line has a better fit as the line
 is closer to the center of the error bounds for most points. It should also be 
 of note that there are no large local minima or maxima on the graph, 
