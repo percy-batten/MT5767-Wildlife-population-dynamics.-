@@ -3,10 +3,10 @@ title: "Project 1 MT5767"
 author: "PB, KA, HS"
 date: "29/01/2021"
 output:
-  word_document: default
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -219,6 +219,14 @@ to wet and dry seasons.
   
 Note: will email lecturer to check if I should include sources regarding
 general biological information. Still working on section. 
+
+## Part B reword
+(I didn't want to change what you had written Percy, but reworded it to make it read better. I have put the rewording in this part so if you want to use some of it you can add it to your part).
+
+Thinking biologically about the situation that growth rate, rt, depends upon rainfall, we can see increased rainfall leads to larger amounts of grass for wildebeest to eat, thus leading to healthier animals, giving them a better chance to survive and reproduce.  
+As wildebeest generally graze on short rapidly growing grass and rainfall in the current year would have a high impact on growth of frequently grazed grass, more food will attract more wildebeest and enhance the ability for the population to grow. 
+Wildebeest also usually give birth at the start of the wet season (November). They have a gestation period of 257 days (~ 8 months), so assuming they are born November-December, offspring will be conceived at the start of the year, which can depend on how much food source is available. Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
+Additionally, the fact that wildebeest have an annual migration further supports the use of rainfall on the current year for use in the model as wildebeest specifically migrate in response to rainfall in the current year in relation to wet and dry seasons. Hence this will impact both the growth rate, as the population will grow if Wildebeest are migrating to the area surveyed, and carrying capacity, as the ability to migrate will depend on resources available.
 
 
 
