@@ -489,7 +489,7 @@ fitm1 <- optim(par = pars,
                 Nhat = wildebeest$Nhat,
                 Sehat = wildebeest$sehat,
                 rain = wildebeest$rain,
-                model =1,
+                model = 1,
                 type = "nll")
 
 fitm2 <- optim(par = pars, 
@@ -499,7 +499,7 @@ fitm2 <- optim(par = pars,
                  Nhat = wildebeest$Nhat,
                  Sehat = wildebeest$sehat,
                  rain = wildebeest$rain,
-                 model =2,
+                 model = 2,
                  type = "nll")
 
 #storing the parameters in a data frame
