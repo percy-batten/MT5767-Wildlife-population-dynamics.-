@@ -24,7 +24,7 @@ The state model is a BAS model and takes into consideration each sub-processes e
 We then create an observation model, which depends on the true population at the current time step. It considers what we would likely observe if we were to survey the population.
 
 
-$\large{State~Model}$
+### State Model
 
 $\large{Survival}$
 
@@ -60,7 +60,7 @@ Hence, from the above sub-processes, our state model produces species abundance 
 
 $$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
 
-$\large{Observation~Model}$
+### Observation Model
 
 Finally, we want to generate our observation model; this is the number of individuals we would see in a survey taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen, with each age category having the same probability of detection:
 
