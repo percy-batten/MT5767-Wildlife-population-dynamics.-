@@ -3,9 +3,10 @@ title: "Project 1 MT5767"
 author: "PB, KA, HS"
 date: "29/01/2021"
 output:
+  word_document: default
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -224,12 +225,12 @@ general biological information. Still working on section.
 ### Part C
 
 The carrying capacity, $K_t$ of Wildebeest at time t is dependent on a few factors in their habitat. These include: Food supply, water supply, habitat space and competition. 
-Wildebeest have a diet that consists strictly of grazing. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the animal population that depends on it.  
+Wildebeest have a diet that consists strictly of grass. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the current animal population that depends on it.  
 
 A study in the Journal of Ecology [Joan Dudney et al. 2017] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They note that "the effect of previous-year precipitation was greater for forbs than grasses, indicating that rainfall-induced biotic effects
 strongly constrain forb growth and weakly impact grasses." This shows that the lagged rainfall has a greater effect on non-grass plant species than grasses, and therefore has a weaker implication on the abundance of the main food source of the wildebeest. 
 
-Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity this way. 
+Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity, not just current and rpevious year rain measurements. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity. 
 
 Overall, the effects of rainfall measured in the current year have a much greater effect on the carrying capacity. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales, which have a large impact on the habitat's ability to support the species, which would indicate that a model for $K_t$ based on $r_{t}$ will be more informative.
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} \\
