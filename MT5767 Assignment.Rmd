@@ -427,15 +427,15 @@ to false predictions.
 
 ### Part B
 
-As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$ in terms of rainfall in the current year, $R_t$ or previous year $R_{t-1}$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model, K_rain. 
+As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$ in terms of rainfall in the current year, $R_t$ or previous year $R_{t-1}$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model. 
 The projection model we will use is:
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 where:
-$$ K_{t_1} = exp(\beta_0 + \beta_1 R_{t})$$
-and 
+$$ K_{t} = exp(\beta_0 + \beta_1 R_{t})$$
+depends on current year rainfall, and 
 $$ K_{t_2} = exp(\beta_0 + \beta_1 R_{t-1})$$
-
-Keeping the growth parameter $r_t$ fixed.
+depends on the previous years rainfall. 
+The growth parameter $r_t$ is fixed.
 
 
 ``` {r}
