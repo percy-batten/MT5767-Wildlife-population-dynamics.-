@@ -427,20 +427,21 @@ to false predictions.
 
 ### Part B
 
-As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$ in terms of rainfall in the current year, $R_t$ or previous year $R_{t-1}$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model. 
+As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$ in terms of rainfall in the current year, $R_t$, or previous year $R_{t-1}$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model. 
 The projection model we will use is:
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 where:
 $$ K_{t} = exp(\beta_0 + \beta_1 R_{t})$$
 depends on current year rainfall, and 
 $$ K_{t_2} = exp(\beta_0 + \beta_1 R_{t-1})$$
-depends on the previous years rainfall. 
+depends on the previous year rainfall. 
 The growth parameter $r_t$ is fixed.
 
 
 ``` {r}
-library(statsecol)
+
 data("wildebeest")
+
 K_rain <- function(pars, years, removals, Nhat, Sehat, rain, model = 1, type = "proj"){
 
   #define variables from the inputs
@@ -469,7 +470,7 @@ K_rain <- function(pars, years, removals, Nhat, Sehat, rain, model = 1, type = "
   
 }
 ```
-This also depends on the parameters: $N_0$, the initial population; The growth parameter, $r$; $\beta_0$ and $\beta_1$, the parameters that govern the carrying capacity.
+This also depends on the parameters: $N_0$, the initial population;$r$, the growth parameter; $\beta_0$ and $\beta_1$, the parameters that govern the carrying capacity.
 To fit our parameters, we begin with the following estimates:
 ```{r, echo = TRUE}
 N0 <- log(0.268)
@@ -506,7 +507,7 @@ fitm2 <- optim(par = pars,
 fit <- data.frame(par1 = fitm1$par, par2 = fitm2$par)
 print(fit)
 ```
-Inspecting the output of coefficients as fitted, we can see that there is very little change in $N_0$ and $r$. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the t-1 model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
+Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the t-1 model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
 
 We can now use these outputs to create models of the projected populations in each model. 
 ```{r}
@@ -528,13 +529,13 @@ abund <- ggplot(data = wildebeest,
          geom_pointrange()+
          theme_bw() +
          labs(x = "Year", y = "Abundance (millions)",
-             title ="Figure 3.2 - Abundance of Wildebeest Populations")+
+             title ="Figure 3.2 -  Wildebeest Abundance")+
          geom_line(aes(y = fitmod1, colour = "t"))+
          geom_line(aes(y = fitmod2, colour = "t-1"))
 
 ggplotly(abund, ttoltop = c("year", "fitmod1", "fitmod2"))
 ```
-We can easily visualise these differences in the plot below. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977.
+We can easily visualise these differences in the plot above. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977.
 
 
 ``` {r}
