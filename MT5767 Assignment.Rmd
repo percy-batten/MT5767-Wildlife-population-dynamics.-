@@ -207,11 +207,11 @@ Question 2 considers a wildebeest example seen in lectures, where abundance esti
 
 ### Part A
 We are given the model where illegal harvesting is assumed to take place *after* growth:
-
-$$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
-This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (ie after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
-
-$$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
+  
+  $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
+  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (ie after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
+  
+  $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
 
 ### Part B
 
