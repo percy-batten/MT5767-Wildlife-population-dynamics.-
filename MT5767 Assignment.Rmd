@@ -31,9 +31,9 @@ $\large{Survival}$
 
 A proportion of each state survives, denoted below as $u$, with each age category having a specific survival probability; it is noted that all individuals in age category 4 die. Below, $n_{i,t-1}$ denotes the population size at the previous time with $i=1,..,4$ representing the respective age category. Since only a proportion of the previous population survives with a certain probability, a binomial model was selected.
 
-$$ u_{1(s),1,t} \thicksim binomial(n_{1, t-1}, 0.45) \\
-u_{1(s),2,t} \thicksim binomial(n_{2,t-1}, 0.7) \\
-u_{1(s),3,t} \thicksim binomial(n_{3,t-1}, 0.7) \\
+$$ u_{1(s),1,t} \thicksim Binomial(n_{1, t-1}, 0.45) \\
+u_{1(s),2,t} \thicksim Binomial(n_{2,t-1}, 0.7) \\
+u_{1(s),3,t} \thicksim Binomial(n_{3,t-1}, 0.7) \\
 u_{1(s),4,t} = 0 $$
 
 $\large{Ageing}$
@@ -53,8 +53,8 @@ $$ u_{3(b),1,t} = u_{2(r),1,t} + b_{2,t} + b_{3,t} \\
 u_{3(b),2,t} = u_{2(r),2,t} \\
 u_{3(b),3,t} = u_{2(r),3,t} \\
 u_{3(b),4,t} = u_{2(r),4,t} \\
-where~\small{b_{2,t} \thicksim poisson(0.9*u_{2(r),2,t}) \\
-b_{3,t} \thicksim poisson(1.9*u_{2(r),3,t})} $$
+where~\small{b_{2,t} \thicksim Poisson(0.9*u_{2(r),2,t}) \\
+b_{3,t} \thicksim Poisson(1.9*u_{2(r),3,t})} $$
 
 
 Hence, from the above sub-processes, our state model produces species abundance estimates, $n_{i, t}$ for each age category $i$ at time $t$:
@@ -65,7 +65,7 @@ $$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
 
 Finally, we want to generate our observation model; this is the number of individuals we would see in a survey taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen, with each age category having the same probability of detection:
 
-$$ y_{i,t} \thicksim binomial(n_{i,t}, 0.5) ~~~~~~
+$$ y_{i,t} \thicksim Binomial(n_{i,t}, 0.5) ~~~~~~
 \small{for~i=1,...,4}$$
 
 Coding these models, a function was created for a four age species, which took inputs: initial population; survival rates; birth rates; probability of detection; number of years to simulate. The output is a data frame of simulated observation and state model estimates.
