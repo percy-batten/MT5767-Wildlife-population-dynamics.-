@@ -249,7 +249,7 @@ strongly constrain forb growth and weakly impact grasses." This shows that the l
 
 Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect of long drought periods. This may beyond the scope the data collected, but a more in depth analysis could highlight key changes in the carrying capacity this way. 
 
-However, the effects of rainfall measured in the current year are much greater in comparison. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales which would indicate that a model for $K_t$ based on $r_{t}$ will be more informative.
+Overall, the effects of rainfall measured in the current year are much greater in comparison. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales which would indicate that a model for $K_t$ based on $r_{t}$ will be more informative.
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 ---
 ## Question 3
@@ -510,7 +510,7 @@ fitm2 <- optim(par = pars,
 fit <- data.frame(par1 = fitm1$par, par2 = fitm2$par)
 print(fit)
 ```
-Inspecting the output of coefficients as fitted, we can see that there is very little change in $N_0$ and $r$. The difference in the beta terms are much more significant:$log(K_t)$ when rain fall is equal to 0. $\beta_{0_1}$ = `r fit$par1[3]`
+Inspecting the output of coefficients as fitted, we can see that there is very little change in $N_0$ and $r$. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the t-1 model, which means that the rainfall contributes very little to the carrying capacity in a given year t. This is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977. 
 ```{r}
 #creating the 
 fitmod1 <- K_rain(model = 1,type = "proj", fit$par1, nrow(wildebeest), 
@@ -523,6 +523,7 @@ fitmod2 <- K_rain(model = 2,type = "proj", fit$par2, nrow(wildebeest),
 
 ```
 
+We can easily visualise these differences in the plot below.  
 ```{r,  include=TRUE, echo =FALSE}
 abund <- ggplot(data = wildebeest, 
                mapping = aes(x= year, y =Nhat, ymin = Nhat - sehat, ymax = Nhat + sehat))+
@@ -546,7 +547,10 @@ nll <- c(K_rain(model = 1,type = "nll", fit$par1, nrow(wildebeest),
          K_rain(model = 2,type = "nll", fit$par1, nrow(wildebeest), 
                wildebeest$Catch, wildebeest$Nhat, wildebeest$sehat, 
                wildebeest$rain))
+#K is the number of parameters
 K <- 4
+
+#calculating the AIC
 aic <- 2 * nll + 2 * K
 
 AIC <- data.frame(Model = c("t", "t-1"),
