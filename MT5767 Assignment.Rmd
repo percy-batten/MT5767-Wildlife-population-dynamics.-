@@ -63,7 +63,7 @@ u_{2(r),4,t} = u_{1(s),3,t} $$
 
 $\large{Birth}$
 
-In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births enter into the population in age category 1. The number of individuals in age categories 2 and above are not effected in this sub-process. As we ar dealing with reproduction rates and not probabilities, with the reproduction rate for age 3 individuals indicating more than one offspring per some individuals, a poisson distribution was chosen.
+In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births enter into the population in age category 1; the number of individuals in age categories 2 and above are not effected in this sub-process. As we arE dealing with reproduction rates and not probabilities, with the reproduction rate for age 3 individuals indicating more than one offspring per some individuals, a poisson distribution was chosen for each birthing process.
 
 $$ u_{3(b),1,t} = u_{2(r),1,t} + b_{2,t} + b_{3,t} \\
 u_{3(b),2,t} = u_{2(r),2,t} \\
@@ -73,18 +73,18 @@ where~\small{b_{2,t} \thicksim poisson(0.9*u_{2(r),2,t}) \\
 b_{3,t} \thicksim poisson(1.9*u_{2(r),3,t})} $$
 
 
-Hence, from the above sub-processes, our state model produces species abundance estimates, $n_{i, t}$ for each category $i$ at time $t$:
+Hence, from the above sub-processes, our state model produces species abundance estimates, $n_{i, t}$ for each age category $i$ at time $t$:
 
 $$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
 
 $\large{Observation~Model}$
 
-Finally, we want to generate our observation model; this is the number of individuals we would see in a survey taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen as below, with each age category having the same probability of detection:
+Finally, we want to generate our observation model; this is the number of individuals we would see in a survey taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen, with each age category having the same probability of detection:
 
 $$ y_{i,t} \thicksim binomial(n_{i,t}, 0.5) ~~~~~~
 \small{for~i=1,...,4}$$
 
-Coding these models, a function was created for a four age species, which took inputs: initial population; survival rates; birth rates; probability of detection; number of years to simulate.
+Coding these models, a function was created for a four age species, which took inputs: initial population; survival rates; birth rates; probability of detection; number of years to simulate. The output is a data frame of simulated observation and state model estimates.
 
 ```{r}
 
@@ -148,7 +148,7 @@ n_{2,1} = 70 \\
 n_{3,1} = 50 \\
 n_{4,1} = 30$$
 
-The variables were coded for the above function, using our probabilities and rates discussed above as well as these initial population sizes and the function was run to simulate 25 years.
+The variables were coded for the above function, using our probabilities and rates discussed above, as well as these initial population sizes and the function was run to simulate 25 years.
 
 ```{r}
 
@@ -163,7 +163,7 @@ model <- bas_ssm(n0, phi, rho, 0.5, 25)
 
 ```
 
-Looking at the results graphically, we consider the overall population dynamics, combining the age groups
+Looking at the results graphically, we consider the overall population dynamics, combining all age groups.
 
 ```{r, echo=F, message=F}
 
@@ -181,7 +181,7 @@ ggplotly(ov_abundance, ttoltip = c("Overall Abundance", "Year"))
 
 ```
 
-Then splitting the models by age group
+Then, splitting the models by age group.
 
 ```{r, echo=F}
 
@@ -195,21 +195,21 @@ ggplotly(age_abundance, ttoltip = c("Abundance", "Year"))
 
 ```
 
-We can see from figures 1.1 and 1.2, that the age category which is the most similar to the overall abundance shape is Age 1; this is expected due to this age class contributing most to the overall population. At the start, Age 1 makes up half of the population!
+We can see from figures 1.1 and 1.2, that the age category which is the most similar to the overall abundance shape is age 1; this is expected due to this age class contributing most to the overall population. At the start, age 1 makes up half of the population!
 
-After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 contributes most to Age 1 as its birth rate ($\rho_3 = 1.9$) is more than double that of Age 2 ($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in Age 1 there is often an increase between those years in Age 3 - this can be seen between years 7 and 8 where there is a large increase in Age 1 which can also be seen in Age 3, but in Age 2 the number of individuals actually decreases between these years.
+After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 births' contribute the most to age 1 as its birth rate ($\rho_3 = 1.9$) is more than double that of age 2 ($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in age 1 there is often an increase between those years in age 3 individuals - this can be seen between years 7 and 8 where there is a large increase in age 1 individuals which can also be seen in age 3, whereas in age 2 the number of individuals actually decreases between these years.
 
 Comparing our state model to our observation model, we usually see around half of the actual population, which is to be expected with our probability of detection $p = 0.5$.
 
 ## Question 2
 
-Question 2 considers a wildebeest example seen in lectures, where abundance estimates were produced from aerial surveys taken in the Serengeti between 1960 to 1989. The rainfall for the season and the number of animals taken by illegal harvesting were also recorded yearly. Trying to incorporate these variables into the logistic growth model suggested, to show their impact on the wildebeest population, we consider different forms of the logistic growth model in this question.
+Question 2 considers a wildebeest example seen in lectures, where abundance estimates were produced from aerial surveys taken in the Serengeti between 1960 and 1989. The rainfall for the season and the number of animals taken by illegal harvesting were also recorded yearly. Trying to incorporate these variables into the logistic growth model used to model the population, showing their impact on the wildebeest population, we consider different forms of the logistic growth model in this question.
 
 ### Part A
-We are given the model where illegal harvesting is assumed to take place after growth:
+We are given the model where illegal harvesting is assumed to take place *after* growth:
 
 $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
-This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$. However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Hence if we want the model to reflect this case we would use $c_t$ in the model:
+This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (ie after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
 
 $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
 
