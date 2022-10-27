@@ -437,15 +437,27 @@ $$ K_{t_2} = exp(\beta_0 + \beta_1 R_{t-1})$$
 depends on the previous year rainfall. 
 The growth parameter $r_t$ is fixed.
 
+I will refer to the models as the current modela and the lagged model respectively.  
 
 ``` {r}
 
 data("wildebeest")
 
 #function: K_rain
-            #the function that outputs the population projection 
-            #and negative log likelihood
-# 
+#         the function that outputs the population projection 
+#         and negative log likelihood
+# inputs: pars
+#         years
+#         removals
+#         Nhat
+#         Sehat 
+#         rain
+#         model - allows us to switch between the current and lagged model
+#         type - allows us to change the output between nll and proj
+# Outputs:type = nll
+#           this gives us the negative log likelihood for the give model
+#         type = proj
+#           this outputs a vector of values of the projected population
 K_rain <- function(pars, years, removals, Nhat, Sehat, rain, model = 1, type = "proj"){
 
   #define variables from the inputs
@@ -539,8 +551,24 @@ abund <- ggplot(data = wildebeest,
 
 ggplotly(abund, ttoltop = c("year", "fitmod1", "fitmod2"))
 ```
-We can easily visualise these differences in Figure 3.2. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977. 
-
+We can easily visualise these differences in Figure 3.2. The low $\beta_0$ value in the current model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977. 
+```{r,  include=TRUE, echo =FALSE}
+rain <- ggplot(data = wildebeest, 
+               mapping = aes(x= year, y =Nhat, ymin = Nhat - sehat, ymax = Nhat + sehat))+
+         geom_pointrange(alpha = 0.5)+
+         theme_bw() +
+         labs(x = "Year", y = "Abundance (millions)",
+             title ="Figure 3.3 -  Wildebeest Abundance")+
+         geom_line(aes(y = fitmod1), colour = "red", alpha = 0.5)+
+         geom_line(aes(y = fitmod2), colour = "lightblue", alpha= 0.5)+
+         geom_line(aes(y = rain * 0.5), colour = "blue")+
+         scale_y_continuous(
+            name = "Abundance (millions)",
+            sec.axis = sec_axis( trans=~.*2, name="Rainfall (metres)")###metres??
+        )
+rain
+```
+Figure 3.3 gives greater insight to the how the rainfall influences the animal populations. Between the years 1970 and 1978, the area saw high average rainfalls, reflected in the change of gradient of the current model
 
 ``` {r}
 
