@@ -18,6 +18,8 @@ library(statsecol)
 
 ```
 
+Everyone contributed equally to writing the code and interpreting the results. HS did questions 1 and 2(a), KA did questions 2(c) and 3(b), and PB did questions 2(b) and 3(a). We all worked together to make the final checks, edits and contributions. We read through each others and suggested any edits to be made. Overall the contributions were deemed to be equal and workload was distributed fairly among the group.
+
 ## Question 1
 
 We are given a species with four age classes. The dynamics of the species arise from  the sequence of sub-processes: survival, ageing, birth. To simulate population dynamics we have created a state space model, consisting of the state model and the observation model. 
