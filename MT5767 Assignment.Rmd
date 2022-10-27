@@ -199,31 +199,6 @@ We are given the model where illegal harvesting is assumed to take place *after*
 
 ### Part B
 
-Thinking biologically about the situation the carrying capacity and growth rate
-depend upon rainfall. There is a postive association, which indicates that
-increased rainfall leads to larger amounts of grass for wildebeest to eat
-leading to higher carrying capactiy and growth rate. 
-
-There are a number of factors to consider
-
-Wildebeest usually give birth at the start of the wet season, 
-this would indicate that the current rainfall value is more important
-as wildebeest generally graze on short rapidly growing grass and rainfall
-in the current year would have a higher impact on growth on the rapidly growing
-frequently grazed grass than the previous year, leading to a higher supply for 
-young wildebeest leading to a higher growth rate. 
-
-Additionally the fact that wildebeest have an annual migration further supports
-the use of rainfall on the current year for use in the model as wildebeest 
-specifically migrate in response to rainfall in the current year in relation
-to wet and dry seasons. 
-  
-Note: will email lecturer to check if I should include sources regarding
-general biological information. Still working on section. 
-
-### Part B reword
-(I didn't want to change what you had written above, but rearranged/reworded it to make it flow better. I have put the rewording in this part so if you want to use some of it you can add it).
-
 Thinking biologically about the situation that growth rate, $r_t$, depends upon rainfall, we can see increased rainfall leads to larger amounts of grass for wildebeest to eat, thus leading to healthier animals, giving them a better chance to survive and reproduce.  
 
 As wildebeest generally graze on short rapidly growing grass and rainfall in the current year would have a high impact on growth of frequently grazed grass, more food will attract more wildebeest and enhance the ability for the population to grow. 
