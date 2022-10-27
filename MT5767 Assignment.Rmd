@@ -241,7 +241,7 @@ r_t = \exp{(\alpha_0 + \alpha_1R_t)}$$
 The carrying capacity, $K_t$ of Wildebeest at time t is dependent on a few factors in their habitat. These include: Food supply, water supply, habitat space and competition. 
 Wildebeest have a diet that consists strictly of grass. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the current animal population that depends on it.  
 
-A study in the Journal of Ecology [Joan Dudney et al. 2017] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They note that "the effect of previous-year precipitation was greater for forbs than grasses, indicating that rainfall-induced biotic effects
+A study in the Journal of Ecology [Joan Dudney et al.] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They note that "the effect of previous-year precipitation was greater for forbs than grasses, indicating that rainfall-induced biotic effects
 strongly constrain forb growth and weakly impact grasses." This shows that the lagged rainfall has a greater effect on non-grass plant species than grasses, and therefore has a weaker implication on the abundance of the main food source of the wildebeest. 
 
 Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years". It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity, not just current and previous year rain measurements. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity. 
@@ -442,6 +442,10 @@ The growth parameter $r_t$ is fixed.
 
 data("wildebeest")
 
+#function: K_rain
+            #the function that outputs the population projection 
+            #and negative log likelihood
+# 
 K_rain <- function(pars, years, removals, Nhat, Sehat, rain, model = 1, type = "proj"){
 
   #define variables from the inputs
@@ -535,7 +539,7 @@ abund <- ggplot(data = wildebeest,
 
 ggplotly(abund, ttoltop = c("year", "fitmod1", "fitmod2"))
 ```
-We can easily visualise these differences in the plot above. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977.
+We can easily visualise these differences in Figure 3.2. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977. 
 
 
 ``` {r}
@@ -564,4 +568,12 @@ We can use the equation
 
 $$exp((AIC_{min} - AIC_i)/2) = exp((AIC_{t} - AIC_{t-1})/2)$$
 
-to find that the lagged model is `r exp(AIC$AIC[1] - AIC$AIC[2])` as probable a the current model to minimise the information loss. 
+to find that the lagged model is `r exp(AIC$AIC[1] - AIC$AIC[2])` as probable as the current model to minimise the information loss. 
+
+
+
+#### Citations
+
+Dudney, J., Hallett, L. M., Larios, L., Farrer, E. C., Spotswood, E. N., Stein, C., & Suding, K. N. (2017). *Lagging behind: Have we overlooked previous-year rainfall effects in annual grasslands?* Journal of Ecology, 105(2), 484– 495. https://doi.org/10.1111/1365-2745.12671
+
+Bartzke, Gundula & Ogutu, Joseph & Mukhopadhyay, Sabyasachi & Mtui, Devolent & Dublin, Holly & Piepho, Hans-Peter. (2018). *Rainfall trends and variation in the Maasai Mara ecosystem and their implications for animal population and biodiversity dynamics.* PLOS ONE. 13. e0202814. 10.1371/journal.pone.0202814. 
