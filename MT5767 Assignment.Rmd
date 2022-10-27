@@ -6,6 +6,7 @@ output:
   html_document:
     df_print: paged
   pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(tidyverse)
 library(plotly)
+library(statsecol)
 
 ```
 
@@ -23,15 +25,15 @@ The state model is a BAS model and takes into consideration each sub-processes e
 We then create an observation model, which depends on the true population at the current time step. It considers what we would likely observe if we were to survey the population.
 
 
-$\large{State~Model}$
+### State Model
 
 $\large{Survival}$
 
 A proportion of each state survives, denoted below as $u$, with each age category having a specific survival probability; it is noted that all individuals in age category 4 die. Below, $n_{i,t-1}$ denotes the population size at the previous time with $i=1,..,4$ representing the respective age category. Since only a proportion of the previous population survives with a certain probability, a binomial model was selected.
 
-$$ u_{1(s),1,t} \thicksim binomial(n_{1, t-1}, 0.45) \\
-u_{1(s),2,t} \thicksim binomial(n_{2,t-1}, 0.7) \\
-u_{1(s),3,t} \thicksim binomial(n_{3,t-1}, 0.7) \\
+$$ u_{1(s),1,t} \thicksim Binomial(n_{1, t-1}, 0.45) \\
+u_{1(s),2,t} \thicksim Binomial(n_{2,t-1}, 0.7) \\
+u_{1(s),3,t} \thicksim Binomial(n_{3,t-1}, 0.7) \\
 u_{1(s),4,t} = 0 $$
 
 $\large{Ageing}$
@@ -51,19 +53,19 @@ $$ u_{3(b),1,t} = u_{2(r),1,t} + b_{2,t} + b_{3,t} \\
 u_{3(b),2,t} = u_{2(r),2,t} \\
 u_{3(b),3,t} = u_{2(r),3,t} \\
 u_{3(b),4,t} = u_{2(r),4,t} \\
-where~\small{b_{2,t} \thicksim poisson(0.9*u_{2(r),2,t}) \\
-b_{3,t} \thicksim poisson(1.9*u_{2(r),3,t})} $$
+where~\small{b_{2,t} \thicksim Poisson(0.9*u_{2(r),2,t}) \\
+b_{3,t} \thicksim Poisson(1.9*u_{2(r),3,t})} $$
 
 
 Hence, from the above sub-processes, our state model produces species abundance estimates, $n_{i, t}$ for each age category $i$ at time $t$:
 
 $$ n_{i,t} = u_{3(b),i,t} ~~~~~~ \small{for~ i=1,...,4} $$
 
-$\large{Observation~Model}$
+### Observation Model
 
 Finally, we want to generate our observation model; this is the number of individuals we would see in a survey taken at time $t$. It is stated there is no double counting, hence every observation estimate should be smaller than the state process model abundance estimate $n_{i,t}$. By this methodology, a binomial distribution was chosen, with each age category having the same probability of detection:
 
-$$ y_{i,t} \thicksim binomial(n_{i,t}, 0.5) ~~~~~~
+$$ y_{i,t} \thicksim Binomial(n_{i,t}, 0.5) ~~~~~~
 \small{for~i=1,...,4}$$
 
 Coding these models, a function was created for a four age species, which took inputs: initial population; survival rates; birth rates; probability of detection; number of years to simulate. The output is a data frame of simulated observation and state model estimates.
@@ -219,17 +221,30 @@ to wet and dry seasons.
 Note: will email lecturer to check if I should include sources regarding
 general biological information. Still working on section. 
 
+### Part B reword
+(I didn't want to change what you had written above, but rearranged/reworded it to make it flow better. I have put the rewording in this part so if you want to use some of it you can add it).
+
+Thinking biologically about the situation that growth rate, $r_t$, depends upon rainfall, we can see increased rainfall leads to larger amounts of grass for wildebeest to eat, thus leading to healthier animals, giving them a better chance to survive and reproduce.  
+
+As wildebeest generally graze on short rapidly growing grass and rainfall in the current year would have a high impact on growth of frequently grazed grass, more food will attract more wildebeest and enhance the ability for the population to grow. 
+Wildebeest also usually give birth at the start of the wet season (November). They have a gestation period of 257 days (~ 8 months), so assuming they are born November-December, offspring will be conceived at the start of the year, which can depend on how much food source is available. Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
+
+Additionally, the fact that wildebeest have an annual migration further supports the use of rainfall on the current year for use in the model as wildebeest specifically migrate in response to rainfall in the current year in relation to wet and dry seasons. Hence this will impact both the growth rate, as the population will grow if Wildebeest are migrating to the area surveyed, and carrying capacity, as the ability to migrate will depend on resources available.
+
+$$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} \\
+r_t = \exp{(\alpha_0 + \alpha_1R_t)}$$
+
 
 
 ### Part C
 
 The carrying capacity, $K_t$ of Wildebeest at time t is dependent on a few factors in their habitat. These include: Food supply, water supply, habitat space and competition. 
-Wildebeest have a diet that consists strictly of grazing. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the animal population that depends on it.  
+Wildebeest have a diet that consists strictly of grass. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the current animal population that depends on it.  
 
 A study in the Journal of Ecology [Joan Dudney et al. 2017] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They note that "the effect of previous-year precipitation was greater for forbs than grasses, indicating that rainfall-induced biotic effects
 strongly constrain forb growth and weakly impact grasses." This shows that the lagged rainfall has a greater effect on non-grass plant species than grasses, and therefore has a weaker implication on the abundance of the main food source of the wildebeest. 
 
-Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity this way. 
+Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity, not just current and rpevious year rain measurements. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity. 
 
 Overall, the effects of rainfall measured in the current year have a much greater effect on the carrying capacity. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales, which have a large impact on the habitat's ability to support the species, which would indicate that a model for $K_t$ based on $r_{t}$ will be more informative.
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} \\
@@ -238,46 +253,47 @@ K_t = \exp{(\beta_0 + \beta_1R_t)}$$
 ## Question 3
 ### Part A
 In this part we will be fitting two formulation of the time varying growth rate
-model. One where $r_t$ (growth rate over time) is modeled as a function of rain
+model. One where $r_t$ (growth rate over time) is modelled as a function of rain
 in the same year $R_t$ and another where $r_t$ is modeled as a function of 
-rain in the previous year. As seen previously the log linear model of the form 
+rain in the previous year $R_{t-1}$. 
+
+As seen previously the log linear model of the form 
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 is used. 
 
-Where $N_t$ is the population at time step t, 
+Where $N_t$ is the population at time step $t$, 
 
-Where $N_t$ is the population at time step t-1, 
+$N_{t-1}$ is the population at time step $t-1$, 
 
-$K_t$ is the carrying capacity which is assumed to be fixed and 
+$K_t$ is the carrying capacity which is assumed to be fixed (Equation 3) and 
 
-$c_{t-1}$ is the removal from illegal hunting from the previous year. 
+$c_{t-1}$ is the removal from illegal hunting from time step $t-1$. 
 
-Specifically in this case we are concerned with the growth rate, thus we assume
-constant carrying capacity. This gives us the following equations
+Specifically in this case, we are concerned with the growth rate, thus we assume
+constant carrying capacity. This gives us the following equations for $r_t$ and $K_t$.
 
-### Equation 1 
+#### Equation 1 
 
 Where the growth rate is expressed as a function of rainfall in the same year.
 
 $$ r_t = exp(\alpha_0 +\alpha_1R_t)$$
 
-### Equation 2
+#### Equation 2
 
 Where the growth rate is expressed as a function of rainfall in the 
 previous year. 
 
 $$ r_t = exp(\alpha_0 +\alpha_1R_{t-1})$$
 
-### Equation 3
+#### Equation 3
 
 Where the carrying capacity is assumed to be constant. 
 
-$$ k_t = exp(\beta_0) $$
+$$ K_t = exp(\beta_0) $$
 
 We shall then proceed to fit the model using R. 
 
 ```{r}
-library(statsecol)
 data(wildebeest)
 
 # Coding in progress using practical as a base
@@ -296,7 +312,7 @@ rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type=
   r[1] <- NA
   k[1] <- NA
 
-  # Current year model 
+  # Current year rainfall model 
   
   if(model == 1){
     if(length(pars)!=4){stop("par should have 4 values")}
@@ -304,7 +320,7 @@ rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type=
     k[2:years] <- rep(exp(pars[4]),years-1)
   }
   
-  # Previous year model 
+  # Previous year rainfall model 
   
   if(model == 2){
     if(length(pars)!=4){stop("par should have 4 values")}
@@ -365,16 +381,16 @@ aictab <- data.frame(
 aictab[order(aictab$dAIC),]
 
 ```
-As can be seen from above we obtain an AIc value of -18.96683 for the current
-year model and an AIC of -17.14583 from the previous year model. 
-This would indicate that the current year model is preferable as it has lower AIC.
+As can be seen from above we obtain an AIC value of -18.96683 for the current
+year rainfall model and an AIC of -17.14583 from the previous year rainfall model. 
+This would indicate that the current year rainfall model is preferable as it has a lower AIC.
 
-This also indicates that the slope parameter of approximately 0.63 from 
-alpha_1_1 the current year model is preferable which is different from the 0.15 
-slope parameter for the previous year model indicating that a steeper slope
+This also indicates that the slope parameter of approximately `r round(alpha_1_1, 2)` from 
+`alpha_1_1` in the current year model rainfall is preferable which is different from the `r round(alpha_2_1, 2)`
+slope parameter for the previous year rainfall model indicating that a steeper slope
 parameter is preferable. 
 
-```{r}
+```{r, message=FALSE}
 
 # Note this section is used for graphing and requires the previous R chunk to be
 # run to work
@@ -390,7 +406,7 @@ pred_df <- data.frame(years = rep(wildebeest$year,4),
 
 gpreds <- ggplot(wildebeest, aes(x=year, y=Nhat)) +
           geom_errorbar(aes(ymin=lci,ymax=uci), width=0) +
-          ggtitle("Figure 3.1- Abundance over years for current year vs previous year models") +
+          ggtitle("Figure 3.1 - Wildebeest Abundance") +
           geom_point(size=3) +
           geom_line(data=pred_df, aes(x=years,y=N,color=Model,group=Model),size=0.8) +
           ylim(0,2.1) + ylab("Abundance (millions)") + xlab("Year") +
@@ -398,9 +414,9 @@ gpreds <- ggplot(wildebeest, aes(x=year, y=Nhat)) +
 gpreds
 
 ```
-As can be seen from the graph above both models fit well and are within error
-bounds which is expected given the low AIC previously, however it can be seen
-that The model represented by the blue line has a better fit as the line
+It can be seen from the graph above both models fit well and are within error
+bounds, which is expected given the low AIC previously. However, it can be seen
+that the model represented by the blue line has a better fit as the line
 is closer to the center of the error bounds for most points. It should also be 
 of note that there are no large local minima or maxima on the graph, 
 which is good as it indicates that parameter estimates will not lead
@@ -408,26 +424,24 @@ to false predictions.
 
 
 
----
 
+### Part B
 
-## Question 3
-#### part b
-
-As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model, K_rain. 
+As discussed in question 2 part b, we would like to find out whether it is more appropriate to model the carrying capacity of the wildebeest, $K_t$ in terms of rainfall in the current year, $R_t$, or previous year $R_{t-1}$. To do this, we can make a function that returns the projection of the wildebeest population and also the negative log likelihood for each model. 
 The projection model we will use is:
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
 where:
-$$ K_{t_1} = exp(\beta_0 + \beta_1 R_{t})$$
-and 
+$$ K_{t} = exp(\beta_0 + \beta_1 R_{t})$$
+depends on current year rainfall, and 
 $$ K_{t_2} = exp(\beta_0 + \beta_1 R_{t-1})$$
-
-Keeping the growth parameter $r_t$ fixed.
+depends on the previous year rainfall. 
+The growth parameter $r_t$ is fixed.
 
 
 ``` {r}
-library(statsecol)
+
 data("wildebeest")
+
 K_rain <- function(pars, years, removals, Nhat, Sehat, rain, model = 1, type = "proj"){
 
   #define variables from the inputs
@@ -456,7 +470,7 @@ K_rain <- function(pars, years, removals, Nhat, Sehat, rain, model = 1, type = "
   
 }
 ```
-This also depends on the parameters: $N_0$, the initial population; The growth parameter, $r$; $\beta_0$ and $\beta_1$, the parameters that govern the carrying capacity.
+This also depends on the parameters: $N_0$, the initial population;$r$, the growth parameter; $\beta_0$ and $\beta_1$, the parameters that govern the carrying capacity.
 To fit our parameters, we begin with the following estimates:
 ```{r, echo = TRUE}
 N0 <- log(0.268)
@@ -476,7 +490,7 @@ fitm1 <- optim(par = pars,
                 Nhat = wildebeest$Nhat,
                 Sehat = wildebeest$sehat,
                 rain = wildebeest$rain,
-                model =1,
+                model = 1,
                 type = "nll")
 
 fitm2 <- optim(par = pars, 
@@ -486,14 +500,14 @@ fitm2 <- optim(par = pars,
                  Nhat = wildebeest$Nhat,
                  Sehat = wildebeest$sehat,
                  rain = wildebeest$rain,
-                 model =2,
+                 model = 2,
                  type = "nll")
 
 #storing the parameters in a data frame
 fit <- data.frame(par1 = fitm1$par, par2 = fitm2$par)
 print(fit)
 ```
-Inspecting the output of coefficients as fitted, we can see that there is very little change in $N_0$ and $r$. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the t-1 model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
+Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the t-1 model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
 
 We can now use these outputs to create models of the projected populations in each model. 
 ```{r}
@@ -515,13 +529,13 @@ abund <- ggplot(data = wildebeest,
          geom_pointrange()+
          theme_bw() +
          labs(x = "Year", y = "Abundance (millions)",
-             title ="Figure 3.2 - Abundance of Wildebeest Populations")+
+             title ="Figure 3.2 -  Wildebeest Abundance")+
          geom_line(aes(y = fitmod1, colour = "t"))+
          geom_line(aes(y = fitmod2, colour = "t-1"))
 
 ggplotly(abund, ttoltop = c("year", "fitmod1", "fitmod2"))
 ```
-We can easily visualise these differences in the plot below. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977.
+We can easily visualise these differences in the plot above. The low $\beta_0$ value in the t-1 model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977.
 
 
 ``` {r}
