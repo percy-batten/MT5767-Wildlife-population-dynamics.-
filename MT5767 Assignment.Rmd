@@ -365,7 +365,7 @@ This also indicates that the slope parameter of approximately `r round(alpha_1_1
 slope parameter for the previous year rainfall model indicating that a steeper slope
 parameter is preferable. 
 
-```{r, message=FALSE}
+```{r, warning=F}
 
 # Note this section is used for graphing and requires the previous R chunk to be
 # run to work
