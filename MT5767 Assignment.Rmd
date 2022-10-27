@@ -47,7 +47,7 @@ u_{2(r),4,t} = u_{1(s),3,t} $$
 
 $\large{Birth}$
 
-In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births enter into the population in age category 1; the number of individuals in age categories 2 and above are not effected in this sub-process. As we arE dealing with reproduction rates and not probabilities, with the reproduction rate for age 3 individuals indicating more than one offspring per some individuals, a poisson distribution was chosen for each birthing process.
+In this model, only age categories 2 and 3 reproduce with their respective reproduction rates. These births enter into the population in age category 1; the number of individuals in age categories 2 and above are not effected in this sub-process. As we are dealing with reproduction rates and not probabilities, with the reproduction rate for age 3 individuals indicating more than one offspring per some individuals, a poisson distribution was chosen for each birthing process.
 
 $$ u_{3(b),1,t} = u_{2(r),1,t} + b_{2,t} + b_{3,t} \\
 u_{3(b),2,t} = u_{2(r),2,t} \\
