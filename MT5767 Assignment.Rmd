@@ -545,4 +545,4 @@ AIC <- data.frame(Model = c("K ~ t", "K ~ t-1"),
                   dAIC = c(aic - min(aic)))
 AIC[order(aictab$dAIC),]
 ```
-Looking at the table above, we can see that the model with the lower AIC is model 1, when the carrying capacity is modeled by the rainfall in the current year. This is consistent with our beliefs from question 2. 
+Looking at the table above, we can see that the model with the lower AIC is model 1, when the carrying capacity is modeled by the rainfall in the current year. This implies that the 
