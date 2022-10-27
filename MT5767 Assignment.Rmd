@@ -244,7 +244,7 @@ Wildebeest have a diet that consists strictly of grass. Intuitively, this would 
 A study in the Journal of Ecology [Joan Dudney et al. 2017] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They note that "the effect of previous-year precipitation was greater for forbs than grasses, indicating that rainfall-induced biotic effects
 strongly constrain forb growth and weakly impact grasses." This shows that the lagged rainfall has a greater effect on non-grass plant species than grasses, and therefore has a weaker implication on the abundance of the main food source of the wildebeest. 
 
-Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years'. It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity, not just current and rpevious year rain measurements. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity. 
+Another study, [Gundula S. Bartzke et al.] conducted in the Serengeti national park, notes that "the increasing rainfall extremes in the Mara can be expected to create conditions conducive to outbreaks of infectious animal diseases and reduced vegetation quality for herbivores, particularly when droughts and floods persist over multiple years". It may therefore be useful for ecologists to incorporate the effect long drought periods can have on carrying capacity, not just current and previous year rain measurements. This may be beyond the scope of the data collected, but a more in depth analysis could highlight key changes in the carrying capacity. 
 
 Overall, the effects of rainfall measured in the current year have a much greater effect on the carrying capacity. There is a much clearer pattern between rainfall and the growth of vegetation at smaller timescales, which have a large impact on the habitat's ability to support the species, which would indicate that a model for $K_t$ based on $r_{t}$ will be more informative.
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} \\
@@ -557,6 +557,11 @@ AIC <- data.frame(Model = c("K ~ t", "K ~ t-1"),
                   NLL = nll,
                   AIC = aic,
                   dAIC = c(aic - min(aic)))
-AIC[order(aictab$dAIC),]
+AIC
 ```
-Looking at the table above, we can see that the model with the lower AIC is model 1, when the carrying capacity is modeled by the rainfall in the current year. This is consistent with our beliefs from question 2. 
+Looking at the table above, we can see that the model with the lower AIC is model 1, when the carrying capacity is modeled by the rainfall in the current year. The AIC measures the relative goodness of fit for each model, indicating that the model for t is more likely to minimise teh information loss. 
+We can use the equation 
+
+$$exp((AIC_{min} - AIC_i)/2) = exp((AIC_{t} - AIC_{t-1})/2)$$
+
+to find that the lagged model is `r exp(AIC$AIC[1] - AIC$AIC[2])` as probable a the current model to minimise the information loss. 
