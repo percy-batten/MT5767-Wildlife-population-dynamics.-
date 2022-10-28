@@ -197,7 +197,7 @@ Question 2 considers a wildebeest example seen in lectures, where abundance esti
 We are given the model where illegal harvesting is assumed to take place *after* growth:
   
   $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
-  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year(after the population has been measured for year $t-1$), i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (i.e after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$, before we have made the measurement of $N_t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
+  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year(after the population has been measured for year $t-1$), i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$, before we have made the measurement of $N_t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
   
   $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
 
@@ -207,7 +207,7 @@ Thinking biologically about the situation that growth rate, $r_t$, depends upon 
 
 As wildebeest generally graze on short rapidly growing grass and rainfall in the current year would have a high impact on growth of frequently grazed grass, more food will attract more wildebeest and enhance the ability for the population to grow. 
 
-Wildebeest usually breed at the end of the wet season (February-April). They have a gestation period of 240 plus or minus 11.7 days (Clay et al,2010, p365-371),thus offspring will usually be conceived at the start of the year, which means rainfall in the current year has a larger impact on growth as it will directly impact food supply for the young growing Wildebeest, as well as the breeding adults.  Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
+Wildebeest usually breed at the end of the wet season (February-April). They have a gestation period of 240 plus or minus 11.7 days (Clay et al,2010, p365-371), thus offspring will usually be conceived at the start of the year, which means rainfall in the current year has a larger impact on growth as it will directly impact food supply for the young growing Wildebeest, as well as the breeding adults.  Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
 
 Additionally, the fact that wildebeest have an annual migration further supports the use of rainfall on the current year for use in the model as wildebeest specifically migrate in response to rainfall in the current year in relation to wet and dry seasons. Hence this will impact both the growth rate, as the population will grow if Wildebeest are migrating to the area surveyed, and carrying capacity, as the ability to migrate will depend on resources available. Wildebeest are part of the alcelaphines subfamily and it should be noted that, 
 "As a rule, migratory alcelaphines utilise arid lands only during the rains and concentrate around higher rainfall areas during the dry season."  (Estes, 1991, p134)" 
@@ -374,7 +374,7 @@ This also indicates that the slope parameter of approximately `r round(alpha_1_1
 slope parameter for the previous year rainfall model indicating that a steeper slope
 parameter is preferable. 
 
-```{r, warning=F}
+```{r, warning=F, echo=F}
 
 # Note this section is used for graphing and requires the previous R chunk to be
 # run to work
@@ -398,7 +398,8 @@ gpreds <- ggplot(wildebeest, aes(x=year, y=Nhat)) +
 gpreds
 
 ```
-It can be seen from the graph above both models fit well and are within error
+
+It can be seen from figure 3.1 both models fit well and are within error
 bounds, which is expected given the low AIC previously. However, it can be seen
 that the model represented by the blue line has a better fit as the line
 is closer to the center of the error bounds for most points. It should also be 
@@ -509,7 +510,7 @@ fit <- data.frame(pars = c("N0", "r", "Beta0", "Beta1"),
                   Lagged = (fitm2$par))
 print(fit)
 ```
-Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the current model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0}$ = `r  fit$Lagged[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
+Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_1$ is diminished in the lagged model, which means that the previous year rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our  (lagged) $\beta_{0}$ = `r  fit$Lagged[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
 
 We can now use these outputs to create models of the projected populations in each model. 
 ```{r}
@@ -537,7 +538,9 @@ abund <- ggplot(data = wildebeest,
 
 ggplotly(abund, ttoltop = c("year", "fitmod1", "fitmod2"))
 ```
-We can easily visualise these differences in Figure 3.2. The low $\beta_0$ value in the current model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977. 
+
+In figure 3.2 we can see the current and lagged models' plotted against the observed wildebeest data. We can see the current model fits the observations better than the lagged, responding more to the variability of observations, where the lagged model remains considerably linear.
+
 ```{r,  include=TRUE, echo =FALSE, warning=F}
 rain <- ggplot(data = wildebeest, 
                mapping = aes(x= year, y =Nhat, ymin = Nhat - sehat, ymax = Nhat + sehat))+
@@ -554,7 +557,8 @@ rain <- ggplot(data = wildebeest,
         )
 rain
 ```
-Figure 3.3 gives greater insight to the how the rainfall influences the animal populations. Between the years 1970 and 1978, the area saw high average rainfalls, reflected in the change of gradient of the current model
+
+Figure 3.3 gives greater insight to the how the rainfall influences the animal populations. Between the years 1970 and 1978, the area saw high average rainfalls, reflected in the change of gradient of the current model.
 
 ``` {r}
 
@@ -577,6 +581,7 @@ AIC <- data.frame(Model = c("K ~ t", "K ~ t-1"),
                   dAIC = c(aic - min(aic)))
 AIC
 ```
+
 Looking at the table above, we can see that the model with the lower AIC is the current rainfall model(K~t). The AIC measures the relative goodness of fit for each model, indicating that the model for t is more likely to minimise the information loss. 
 We can use the equation 
 
