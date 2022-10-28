@@ -197,7 +197,7 @@ Question 2 considers a wildebeest example seen in lectures, where abundance esti
 We are given the model where illegal harvesting is assumed to take place *after* growth:
   
   $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
-  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year(after the population has been measured for year $t-1$), i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (i.e after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
+  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year(after the population has been measured for year $t-1$), i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (i.e after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$, before we have made the measurement of $N_t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
   
   $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
 
@@ -241,7 +241,7 @@ K_t = \exp{(\beta_0 + \beta_1R_t)}$$
 ### Part A
 In this part we will be fitting two formulation of the time varying growth rate
 model. One where $r_t$ (growth rate over time) is modelled as a function of rain
-in the same year $R_t$ and another where $r_t$ is modeled as a function of 
+in the same year $R_t$ and another where $r_t$ is modelled as a function of 
 rain in the previous year $R_{t-1}$. 
 
 As seen previously the log linear model of the form 
@@ -289,7 +289,7 @@ data(wildebeest)
 
 varying_growth_model <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type="nll"){
   
-  #parameter set up
+  # parameter set up
   
   N0 <- exp(pars[1])
   N <- numeric(years)
@@ -315,20 +315,20 @@ varying_growth_model <- function(pars, years, removals, Nhat, SEhat, rain, model
     k[2:years] <- rep(exp(pars[4]),years-1)
   }
   
-    #generate population dynamics:
+    # generate population dynamics:
   for(i in 2:years){
     N[i]=N[i-1] + r[i] * N[i-1] * (1-N[i-1]/k[i]) - removals[i-1]
   }
   
   negloglik <- -sum(dnorm(Nhat,N,SEhat,log=TRUE), na.rm=TRUE)
   
-  #what should be returned? 
+  # what should be returned? 
   if(type=="nll"){  return(negloglik)}
   if(type=="proj"){ return(N)}
 }
 
 
-#assigning parameter values based upon the data
+# assigning parameter values based upon the data
 
 yrs <- nrow(wildebeest)
 rmv <- wildebeest$Catch
@@ -343,17 +343,17 @@ fit_2 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = varying_growth_model, year
                removals = rmv, Nhat = Nhat, SEhat = SEhat, rain = rain, model = 2)
 
 # checking parameter values
-# Because of the way we've worked our function pars[3] is our alpha 1
+# because of the way we've worked our function pars[3] is our alpha 1
 
-#model 1 alpha 1
+# Model 1 alpha 1
 alpha_1_1 <- fit_1$par[3]
 
-#Model 2 alpha 1
+# Model 2 alpha 1
 
 alpha_2_1 <- fit_2$par[3]
 
 
-#calculating AIC
+# calculating AIC
 
 aic1 <- 2*fit_1$value + 2*length(fit_1$par)
 aic2 <- 2*fit_2$value + 2*length(fit_2$par)
@@ -365,12 +365,12 @@ aictab <- data.frame(
 aictab[order(aictab$dAIC),]
 
 ```
-As can be seen from above we obtain an AIC value of -18.96683 for the current
+The above table shows the model for using current year rainfall (r(t)k(.)) and previous year rainfall (r(t-1)k(.)). It can be seen from the table we obtain an AIC value of -18.96683 for the current
 year rainfall model and an AIC of -17.14583 from the previous year rainfall model. 
 This would indicate that the current year rainfall model is preferable as it has a lower AIC.
 
 This also indicates that the slope parameter of approximately `r round(alpha_1_1, 2)` from 
-`alpha_1_1` in the current year model rainfall is preferable which is different from the `r round(alpha_2_1, 2)`
+`alpha_1_1` in the current year model rainfall is preferable, which is different from the `r round(alpha_2_1, 2)`
 slope parameter for the previous year rainfall model indicating that a steeper slope
 parameter is preferable. 
 
@@ -509,7 +509,7 @@ fit <- data.frame(pars = c("N0", "r", "Beta0", "Beta1"),
                   Lagged = (fitm2$par))
 print(fit)
 ```
-Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the lagged model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
+Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the current model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0}$ = `r  fit$Lagged[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
 
 We can now use these outputs to create models of the projected populations in each model. 
 ```{r}
@@ -538,7 +538,7 @@ abund <- ggplot(data = wildebeest,
 ggplotly(abund, ttoltop = c("year", "fitmod1", "fitmod2"))
 ```
 We can easily visualise these differences in Figure 3.2. The low $\beta_0$ value in the current model is characterised by the smooth slope sections bisected by the introduction of the removals beginning in 1977. 
-```{r,  include=TRUE, echo =FALSE}
+```{r,  include=TRUE, echo =FALSE, warning=F}
 rain <- ggplot(data = wildebeest, 
                mapping = aes(x= year, y =Nhat, ymin = Nhat - sehat, ymax = Nhat + sehat))+
          geom_pointrange(alpha = 0.5)+
@@ -577,7 +577,7 @@ AIC <- data.frame(Model = c("K ~ t", "K ~ t-1"),
                   dAIC = c(aic - min(aic)))
 AIC
 ```
-Looking at the table above, we can see that the model with the lower AIC is the current model, when the carrying capacity is modeled by the rainfall in the current year. The AIC measures the relative goodness of fit for each model, indicating that the model for t is more likely to minimise the information loss. 
+Looking at the table above, we can see that the model with the lower AIC is the current rainfall model(K~t). The AIC measures the relative goodness of fit for each model, indicating that the model for t is more likely to minimise the information loss. 
 We can use the equation 
 
 $$exp((AIC_{min} - AIC_i)/2) = exp((AIC_{t} - AIC_{t-1})/2)$$
