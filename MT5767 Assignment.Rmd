@@ -505,19 +505,21 @@ fitm2 <- optim(par = pars,
                  type = "nll")
 
 #storing the parameters in a data frame
-fit <- data.frame(par1 = fitm1$par, par2 = fitm2$par)
+fit <- data.frame(pars = c("N0", "r", "Beta0", "Beta1"),
+                  Current = (fitm1$par), 
+                  Lagged = (fitm2$par))
 print(fit)
 ```
-Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the t-1 model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
+Inspecting the output of coefficients as fitted, we can see that there is very little difference in $N_0$ and $r$ between models. The difference in the beta terms are much more significant: The second term, $\beta_0$ is diminished in the lagged model, which means that the rainfall contributes very little to the carrying capacity in a given year t. When this value is close to 0, our model approaches the examples from practical 3, where the rainfall is not modeled at all. Here, our $\beta_{0_2}$ = `r  fit$par2[3]` is similar to the $\beta$ = `r log(2.604)` found when the carrying capacity is fit as a constant. 
 
 We can now use these outputs to create models of the projected populations in each model. 
 ```{r}
 #creating the 
-fitmod1 <- K_rain(model = 1,type = "proj", fit$par1, nrow(wildebeest), 
+fitmod1 <- K_rain(model = 1,type = "proj", fit$Current, nrow(wildebeest), 
                   wildebeest$Catch, wildebeest$Nhat, wildebeest$sehat, 
                   wildebeest$rain)
 
-fitmod2 <- K_rain(model = 2,type = "proj", fit$par2, nrow(wildebeest), 
+fitmod2 <- K_rain(model = 2,type = "proj", fit$Lagged, nrow(wildebeest), 
                   wildebeest$Catch, wildebeest$Nhat, wildebeest$sehat, 
                   wildebeest$rain)
 
@@ -557,10 +559,10 @@ Figure 3.3 gives greater insight to the how the rainfall influences the animal p
 
 ``` {r}
 
-nll <- c(K_rain(model = 1,type = "nll", fit$par1, nrow(wildebeest), 
+nll <- c(K_rain(model = 1,type = "nll", (fit$Current), nrow(wildebeest), 
                wildebeest$Catch, wildebeest$Nhat, wildebeest$sehat, 
                wildebeest$rain),
-         K_rain(model = 2,type = "nll", fit$par1, nrow(wildebeest), 
+         K_rain(model = 2,type = "nll", (fit$Lagged), nrow(wildebeest), 
                wildebeest$Catch, wildebeest$Nhat, wildebeest$sehat, 
                wildebeest$rain))
 #K is the number of parameters
@@ -576,7 +578,7 @@ AIC <- data.frame(Model = c("K ~ t", "K ~ t-1"),
                   dAIC = c(aic - min(aic)))
 AIC
 ```
-Looking at the table above, we can see that the model with the lower AIC is model 1, when the carrying capacity is modeled by the rainfall in the current year. The AIC measures the relative goodness of fit for each model, indicating that the model for t is more likely to minimise teh information loss. 
+Looking at the table above, we can see that the model with the lower AIC is the current model, when the carrying capacity is modeled by the rainfall in the current year. The AIC measures the relative goodness of fit for each model, indicating that the model for t is more likely to minimise the information loss. 
 We can use the equation 
 
 $$exp((AIC_{min} - AIC_i)/2) = exp((AIC_{t} - AIC_{t-1})/2)$$
