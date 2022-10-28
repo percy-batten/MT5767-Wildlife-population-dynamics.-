@@ -563,7 +563,7 @@ rain <- ggplot(data = wildebeest,
          geom_line(aes(y = rain * 0.5), colour = "blue")+
          scale_y_continuous(
             name = "Abundance (millions)",
-            sec.axis = sec_axis( trans=~.*2, name="Rainfall (metres)")###metres??
+            sec.axis = sec_axis( trans=~.*2, name="Rainfall (cm)")
         )
 rain
 ```
