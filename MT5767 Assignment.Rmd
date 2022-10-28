@@ -601,7 +601,10 @@ Overall, in question 1 we seen interesting relationships between the different a
 From question 3, we can see our expectations in what rainfall measurement to use to model carrying capacity and growth were supported. Current rainfall used in both models performed better than previous year, and it would be interesting to look further, by modelling both growth rate and carrying capacity in terms of rainfall in the same model. 
 
 
-#### Citations
+
+
+
+#### *Citations*
 
 Estes, R. (1991) The behavior guide to African mammals : including hoofed mammals, carnivores, primates. Berkeley : University of California Press
 
