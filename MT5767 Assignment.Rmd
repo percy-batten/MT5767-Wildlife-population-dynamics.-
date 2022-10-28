@@ -273,9 +273,9 @@ We shall then proceed to fit the model using R.
 ```{r}
 data(wildebeest)
 
-# Coding in progress using practical as a base
+# Coding in process using practical as a base
 
-#defining function
+# Defining function
 
 rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type="nll"){
   
