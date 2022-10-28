@@ -18,7 +18,7 @@ library(statsecol)
 
 ```
 
-Everyone contributed equally to writing the code and interpreting the results. HS did questions 1 and 2(a), KA did questions 2(c) and 3(b), and PB did questions 2(b) and 3(a). We all worked together to make the final checks, edits and contributions. We read through each others and suggested any edits to be made. Overall the contributions were deemed to be equal and workload was distributed fairly among the group.
+Everyone contributed equally to writing the code and interpreting the results. HS did questions 1 and 2(a), KA did questions 2(c) and 3(b), and PB did questions 2(b) and 3(a). We all worked together to make the final checks, edits and contributions. We read through each others' parts and suggested any edits to be made. Overall the contributions were deemed to be equal and workload was distributed fairly among the group.
 
 ## Question 1
 
@@ -185,17 +185,19 @@ We can see from figures 1.1 and 1.2, that the age category which is the most sim
 
 After age 1, where the probability of survival to age 2 is below half,  each category gradually declines in size. Age 3 births' contribute the most to age 1 as its birth rate ($\rho_3 = 1.9$) is more than double that of age 2 ($\rho_2 = 0.9$). Hence, when we see a large increase from one year to the next in age 1 there is often an increase between those years in age 3 individuals - this can be seen between years 7 and 8 where there is a large increase in age 1 individuals which can also be seen in age 3, whereas in age 2 the number of individuals actually decreases between these years.
 
+Overall, we see some large increases and decreases in the overall population in the state model, but from the 25 years observed no clear patterns are seen in whether the population will increase, decrease or remain similar throughout time. If anything, it may grow/remain at a similar size in time (we see a start population of 300, then growing to 328 25 years later). However, this can only be concluded through further projection into the future.
+
 Comparing our state model to our observation model, we usually see around half of the actual population, which is to be expected with our probability of detection $p = 0.5$.
 
 ## Question 2
 
-Question 2 considers a wildebeest example seen in lectures, where abundance estimates were produced from aerial surveys taken in the Serengeti between 1960 and 1989. The rainfall for the season and the number of animals taken by illegal harvesting were also recorded yearly. Trying to incorporate these variables into the logistic growth model used to model the population, showing their impact on the wildebeest population, we consider different forms of the logistic growth model in this question.
+Question 2 considers a wildebeest example seen in lectures, where abundance estimates were produced from aerial surveys taken in the Serengeti between 1960 and 1989. The rainfall for the season and the number of animals taken by illegal harvesting were also recorded yearly. Trying to incorporate these variables into the logistic growth model used to model the population, showing their impact on the wildebeest population, we consider different forms of the model in this question, before doing model anaylsis in question 3.
 
 ### Part A
 We are given the model where illegal harvesting is assumed to take place *after* growth:
   
   $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} $$
-  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year, i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (ie after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
+  This is because the measurement of hunting $c$ is assumed to be measured at the end of the year(after the population has been measured for year $t-1$), i.e by the end of year $t-1$, $c_{t-1}$ million Wildebeest have been killed and hence this will be taken off the measurement of year $t$ (i.e after growth). However if we want to harvest *before* growth, we would assume $c$ represents that it knows the number of Wildebeest which will be killed at time $t$. Therefore, if we want the model to reflect this case we would use $c_t$ in the model, harvesting taking place for the current year before they grow in the next year:
   
   $$ N_t = N_{t-1} + r_tN_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_t $$
 
@@ -204,19 +206,17 @@ We are given the model where illegal harvesting is assumed to take place *after*
 Thinking biologically about the situation that growth rate, $r_t$, depends upon rainfall, we can see increased rainfall leads to larger amounts of grass for wildebeest to eat, thus leading to healthier animals, giving them a better chance to survive and reproduce.  
 
 As wildebeest generally graze on short rapidly growing grass and rainfall in the current year would have a high impact on growth of frequently grazed grass, more food will attract more wildebeest and enhance the ability for the population to grow. 
-Wildebeest also usually breed at the end of the wet season (May-July). They have a gestation period of 240 plus or minus 11.7 days (Clay et al,2010, p365-371),thus offspring will usually be conceived at the start of the year (January-March), which makes rainfall in the current year more impact to growth as it will directly impact food supply for the young growing Wildebeest.  Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
 
-Additionally, the fact that wildebeest have an annual migration further supports the use of rainfall on the current year for use in the model as wildebeest specifically migrate in response to rainfall in the current year in relation to wet and dry seasons. Hence this will impact both the growth rate, as the population will grow if Wildebeest are migrating to the area surveyed, and carrying capacity, as the ability to migrate will depend on resources available.
+Wildebeest usually breed at the end of the wet season (February-April). They have a gestation period of 240 plus or minus 11.7 days (Clay et al,2010, p365-371),thus offspring will usually be conceived at the start of the year, which means rainfall in the current year has a larger impact on growth as it will directly impact food supply for the young growing Wildebeest, as well as the breeding adults.  Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
 
-Specifically wildebeest are part of the alcelaphines subfamily and it should be noted that, 
+Additionally, the fact that wildebeest have an annual migration further supports the use of rainfall on the current year for use in the model as wildebeest specifically migrate in response to rainfall in the current year in relation to wet and dry seasons. Hence this will impact both the growth rate, as the population will grow if Wildebeest are migrating to the area surveyed, and carrying capacity, as the ability to migrate will depend on resources available. Wildebeest are part of the alcelaphines subfamily and it should be noted that, 
 "As a rule, migratory alcelaphines utilise arid lands only during the rains and concentrate around higher rainfall areas during the dry season."  (Estes, 1991, p134)" 
 
 It should also be noted that 
 "Populations tend to be most sedentary and herds most stable in composition during the rains and most unstable in the dry season..." 
+This supports use of current year rainfall as a better model, as current rainfall will influence the herd location. Also, as mentioned earlier, wet seasons are usually when the wildebeest give birth. 
 
-This supports use of current year rainfall as a better model since as mentioned earlier wet seasons are usually when the wilderbeest give birth. 
-
-Where the current year rainfall model is given by the below equations.
+The current year rainfall model is given by the below equations.
 
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} \\
 r_t = \exp{(\alpha_0 + \alpha_1R_t)}$$
@@ -226,7 +226,7 @@ r_t = \exp{(\alpha_0 + \alpha_1R_t)}$$
 ### Part C
 
 The carrying capacity, $K_t$ of Wildebeest at time t is dependent on a few factors in their habitat. These include: Food supply, water supply, habitat space and competition. 
-Wildebeest have a diet that consists strictly of grass. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the current animal population that depends on it.  
+Wildebeest have a diet that consists strictly of grass. Intuitively, this would depend on the rainfall of the current year; the effects of droughts can be very rapid and cause grass to dry out on a timescale of weeks, which may hinder the habitat's ability to support the current animal population that depends upon it.  
 
 A study in the Journal of Ecology [Joan Dudney et al.] suggests that the lagged rainfall may have a significant influence over the abundance of plant species in annual-dominated grasslands. They note that "the effect of previous-year precipitation was greater for forbs than grasses, indicating that rainfall-induced biotic effects
 strongly constrain forb growth and weakly impact grasses." This shows that the lagged rainfall has a greater effect on non-grass plant species than grasses, and therefore has a weaker implication on the abundance of the main food source of the wildebeest. 
