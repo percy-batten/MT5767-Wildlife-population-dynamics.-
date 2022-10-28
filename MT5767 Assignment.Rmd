@@ -204,9 +204,17 @@ We are given the model where illegal harvesting is assumed to take place *after*
 Thinking biologically about the situation that growth rate, $r_t$, depends upon rainfall, we can see increased rainfall leads to larger amounts of grass for wildebeest to eat, thus leading to healthier animals, giving them a better chance to survive and reproduce.  
 
 As wildebeest generally graze on short rapidly growing grass and rainfall in the current year would have a high impact on growth of frequently grazed grass, more food will attract more wildebeest and enhance the ability for the population to grow. 
-Wildebeest also usually give birth at the start of the wet season (November). They have a gestation period of 257 days (~ 8 months), so assuming they are born November-December, offspring will be conceived at the start of the year, which can depend on how much food source is available. Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
+Wildebeest also usually breed at the end of the wet season (May-July). They have a gestation period of 240 plus or minus 11.7 days (Clay et al,2010, p365-371),thus offspring will usually be conceived at the start of the year (January-March), which makes rainfall in the current year more impact to growth as it will directly impact food supply for the young growing Wildebeest.  Also, if there is not enough rainfall, and therefore less grass growth, then they will be more likely to move in search of food and will not be observed in the current year. 
 
 Additionally, the fact that wildebeest have an annual migration further supports the use of rainfall on the current year for use in the model as wildebeest specifically migrate in response to rainfall in the current year in relation to wet and dry seasons. Hence this will impact both the growth rate, as the population will grow if Wildebeest are migrating to the area surveyed, and carrying capacity, as the ability to migrate will depend on resources available.
+
+Specifically wildebeest are part of the alcelaphines subfamily and it should be noted that, 
+"As a rule, migratory alcelaphines utilise arid lands only during the rains and concentrate around higher rainfall areas during the dry season."  (Estes, 1991, p134)" 
+
+It should also be noted that 
+"Populations tend to be most sedentary and herds most stable in composition during the rains and most unstable in the dry season..." 
+
+This supports use of current year rainfall as a better model since as mentioned earlier wet seasons are usually when the wilderbeest give birth. 
 
 $$ N_t = N_{t-1} + r_{t}N_{t-1}(1 - \frac{N_{t-1}}{K_t} ) - c_{t-1} \\
 r_t = \exp{(\alpha_0 + \alpha_1R_t)}$$
@@ -277,7 +285,7 @@ data(wildebeest)
 
 # Defining function
 
-rain_rK_nll <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type="nll"){
+varying_growth_model <- function(pars, years, removals, Nhat, SEhat, rain, model=1, type="nll"){
   
   #parameter set up
   
@@ -327,9 +335,9 @@ SEhat <- wildebeest$sehat
 rain <- wildebeest$rain
 
 # fitting the two models:
-fit_1 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = rain_rK_nll, years = yrs, 
+fit_1 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = varying_growth_model, years = yrs, 
                removals = rmv, Nhat = Nhat, SEhat = SEhat, rain = rain, model = 1)
-fit_2 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = rain_rK_nll, years = yrs, 
+fit_2 <- optim(par = c(log(0.1),log(0.25),0, 0), fn = varying_growth_model, years = yrs, 
                removals = rmv, Nhat = Nhat, SEhat = SEhat, rain = rain, model = 2)
 
 # checking parameter values
@@ -372,9 +380,9 @@ parameter is preferable.
 # Note this section is used for graphing and requires the previous R chunk to be
 # run to work
 
-proj_1 <- rain_rK_nll(fit_1$par, years = yrs, removals = rmv, Nhat = Nhat, 
+proj_1 <- varying_growth_model(fit_1$par, years = yrs, removals = rmv, Nhat = Nhat, 
                       SEhat = SEhat, rain = rain, model=1, type="proj")
-proj_2 <- rain_rK_nll(fit_2$par, years = yrs, removals = rmv, Nhat = Nhat, 
+proj_2 <- varying_growth_model(fit_2$par, years = yrs, removals = rmv, Nhat = Nhat, 
                       SEhat = SEhat, rain = rain, model=2, type="proj")
 
 pred_df <- data.frame(years = rep(wildebeest$year,4),
@@ -579,6 +587,11 @@ to find that the lagged model is `r exp(AIC$AIC[1] - AIC$AIC[2])` as probable as
 
 #### Citations
 
+Estes, R. (1991) The behavior guide to African mammals : including hoofed mammals, carnivores, primates. Berkeley : University of California Press
+
+Clay, A.M et al, (2010) Endocrine patterns of the estrous cycle and pregnancy of wildebeest in the Serengeti ecosystem, General and Comparative Endocrinology Volume 166,Issue 2 Page 365-371. 
+
 Dudney, J., Hallett, L. M., Larios, L., Farrer, E. C., Spotswood, E. N., Stein, C., & Suding, K. N. (2017). *Lagging behind: Have we overlooked previous-year rainfall effects in annual grasslands?* Journal of Ecology, 105(2), 484– 495. https://doi.org/10.1111/1365-2745.12671
 
 Bartzke, Gundula & Ogutu, Joseph & Mukhopadhyay, Sabyasachi & Mtui, Devolent & Dublin, Holly & Piepho, Hans-Peter. (2018). *Rainfall trends and variation in the Maasai Mara ecosystem and their implications for animal population and biodiversity dynamics.* PLOS ONE. 13. e0202814. 10.1371/journal.pone.0202814. 
+
